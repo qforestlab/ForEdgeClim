@@ -126,15 +126,19 @@ plots_temp <- function(micro_grid, T_air_vec, output_path){
   ggsave(paste0(output_path, '/temp_air.png'), plot = temp_air_plot, width = 9, height = 3, dpi = 300)
 
 
-  # Modelled air temperature at DTS position
+  # Modelled air temperature at TOMST horizontal positions
   reqhgt <- temp_air_grid |>
     filter(z == req_height, y == 15, x <= length_transect)
+  # Modelled air temperature at TOMST vertical positions
+  vertical <- temp_air_grid |>
+    filter(x == 75, y == 15, z <= 35)
 
   # DTS observations
   DTS <- read.csv("Data/DTS_filtered_distance_temp.csv")
 
   # TOMST observations
   TOMST <- read.csv("Data/TOMST_filtered_distance_temp.csv")
+  TOMST_vertical <- read.csv("Data/TOMST_filtered_height_temp.csv")
 
   # Add dataset lable
   reqhgt$model <- "Modelled (every 1m)"
@@ -172,7 +176,7 @@ plots_temp <- function(micro_grid, T_air_vec, output_path){
 
   ggsave(paste0(output_path, '/temp_air_reqhgt.png'), plot = Temp_height, width = 10, height = 6, dpi = 300)
 
-  # 1D graph with only TOMST observations to compaire with:
+  # 1D graph with only TOMST horizontal observations to compare with:
   Temp_height_TOMST <- ggplot() +
     geom_line(data = reqhgt, aes(x = x, y = temperature, color = "Modelled (every 1m)")) +
     geom_point(data = TOMST, aes(x = 135 - D_edge, y = Tair, color = "TOMST observations (every 15m)")) +
@@ -201,6 +205,36 @@ plots_temp <- function(micro_grid, T_air_vec, output_path){
   print(Temp_height_TOMST)
 
   ggsave(paste0(output_path, '/temp_air_reqhgt_TOMST.png'), plot = Temp_height_TOMST, width = 10, height = 6, dpi = 300)
+
+  # 1D graph with only TOMST vertical observations to compare with:
+  Temp_vertical_TOMST <- ggplot() +
+    geom_path(data = vertical, aes(x = temperature, y = z, color = "Modelled (every 1m)")) +
+    geom_point(data = TOMST_vertical, aes(x = Tair, y = height, color = "TOMST observations (every 7m)")) +
+    geom_path(data = TOMST_vertical, aes(x = Tair, y = height, color = "TOMST observations (every 7m)")) +
+    labs(
+      x = "Temperature (°C)",
+      y = "Height (m)",
+    ) +
+    scale_color_manual(
+      values = c("Modelled (every 1m)" = "cornflowerblue", "TOMST observations (every 7m)" = "darkgreen")
+    ) +
+    theme_bw() +
+    theme(
+      legend.position = "top",
+      legend.title = element_blank(),
+      legend.text  = element_text(size = 18),
+      # as‑titels
+      axis.title.x   = element_text(size = 18, face = "bold"),
+      axis.title.y   = element_text(size = 18, face = "bold"),
+      # tick‑labels
+      axis.text.x    = element_text(size = 18),
+      axis.text.y = element_markdown(size = 18)
+    ) +
+    coord_cartesian(xlim = c(min(vertical$temperature)-3, max(vertical$temperature)))
+
+  print(Temp_vertical_TOMST)
+
+  ggsave(paste0(output_path, '/temp_air_vertical_TOMST.png'), plot = Temp_vertical_TOMST, width = 10, height = 6, dpi = 300)
 
 
 

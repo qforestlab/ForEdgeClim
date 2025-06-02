@@ -4,10 +4,14 @@ Data_to_ignore/
 Data/2023-06-16_ForSe_Gontrode_5cm_transect_emma.las
 Data/2023-07-10_ForSe_Gontrode_5cm_transect_emma.las
 Data/Off-ground&noise.las
+Data/configMan.xml
+Data/Density_AMAPVox.vox
 Data/DTS_unfiltered/*
 !Data/DTS_unfiltered/2023-07-08_hourly.csv
 Output/*
 !Output/2023-07-08_12/
+!Output/animated_timeseries
+Scripts/create_scans_for_AMAPVox.R
 Issues ForEdgeClim.txt
-Best_params_per_datetimes.txt
 fast_load.R
+parameter_distributions_from_literature.xlsx

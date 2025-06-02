@@ -27,16 +27,11 @@ plots_sw <- function(sw_rad_2D, output_path){
     "| Diffuse radiation =", round(F_sky_diff_init,2), 'W/m²'
   )
 
-  # Colors to be used in the plots
-  colors = c("darkgreen", "seagreen", "yellowgreen", "orange")
-
   # F_d_down plot:
   F_d_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_down)) +
     geom_tile() +
-    scale_fill_gradientn(
-      colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    scale_fill_viridis_c(option = "inferno",
+                         guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("Vertical & lateral diffuse downward radiation, averaged across Y-slices"),
          x = "X (m)", y = "Z (m)", fill = "SW diffuse down (W/m²)",
          caption = caption) +
@@ -54,10 +49,8 @@ plots_sw <- function(sw_rad_2D, output_path){
   # F_d_up plot:
   F_d_up = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_up)) +
     geom_tile() +
-    scale_fill_gradientn(
-      colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    scale_fill_viridis_c(option = "inferno",
+                         guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("Vertical & lateral diffuse upward radiation, averaged across Y-slices"),
          x = "X (m)", y = "Z (m)", fill = "SW diffuse up (W/m²)",
          caption = caption) +
@@ -74,10 +67,8 @@ plots_sw <- function(sw_rad_2D, output_path){
   # F_b_down plot:
   F_b_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_b_down)) +
     geom_tile() +
-    scale_fill_gradientn(
-      colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    scale_fill_viridis_c(option = "inferno",
+                         guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("Vertical & lateral direct beam downward radiation, averaged across Y-slices"),
          x = "X (m)", y = "Z (m)", fill = "SW beam down (W/m²)",
          caption = caption) +
@@ -94,10 +85,8 @@ plots_sw <- function(sw_rad_2D, output_path){
   # F_d_down + F_b_down plot:
   F_b_d_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_down + avg_F_b_down)) +
     geom_tile() +
-    scale_fill_gradientn(
-      colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    scale_fill_viridis_c(option = "inferno",
+                         guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("Vertical & lateral, direct & diffuse downward radiation, averaged across Y-slices"),
          x = "X (m)", y = "Z (m)", fill = "SW down (W/m²)",
          caption = caption) +

@@ -56,6 +56,52 @@ import_RMI_observations <- function(){
 
 }
 
+#' Function to import macro temperature from Plant Ecology lab
+#'
+#' @return macro temperature and downward longwave radiation
+#' @importFrom dplyr mutate filter summarise
+#' @importFrom lubridate dmy_hm with_tz hours
+#' @importFrom readr read_delim col_character locale cols col_double
+#' @export
+import_PE_observations <- function(){
+
+  # read txt file
+  df <- read_delim(
+    PE_input_file,
+    delim     = "\t",
+    skip      = 1,
+    col_names = c("Date", "Time", "Temperature"),
+    locale    = locale(decimal_mark = ","),
+    col_types = cols(
+      Date        = col_character(),
+      Time        = col_character(),
+      Temperature = col_double()
+    )
+  )
+
+  # merge Date and Time to posixct object in Brussel's time zone
+  df <- df |>
+    mutate(
+      timestamp_local = dmy_hm(paste(Date, Time), tz = "Europe/Brussels"),
+      timestamp_utc = with_tz(timestamp_local, tzone = "UTC") # convert to UTC
+    )
+
+  target_utc <- datetime
+
+  # filter on 1h interval in UTC
+  result <- df |>
+    filter(timestamp_utc >= target_utc,
+           timestamp_utc <  target_utc + hours(1)) |>
+    summarise(
+      MeanTemperature = mean(Temperature, na.rm = TRUE)
+    )
+
+  macro_temp <<- result$MeanTemperature + 273.15 # in Kelvin
+
+  F_sky_lw <<- e_atm*sigma_SB*macro_temp^4 # in W/m2
+
+}
+
 #' Function to import Delta-T pyranometer observations (direct and diffuse light)
 #'
 #' @return Direct solar beam and diffuse radiation
@@ -105,13 +151,21 @@ import_soil_temperature <- function(){
   # Set 'datehour' as POSIXct-object
   TOMST_hourly$datehour_posix <- as.POSIXct(TOMST_hourly$datehour, format = "%Y.%m.%d %H", tz = "UTC")
 
-  # Filter on datetime and name = "C75"
-  filtered_data <- subset(TOMST_hourly, datehour_posix == datetime & height == 0) #name == "C75")
+  # Filter on datetime and bodemhoogte
+  filtered_data <- subset(TOMST_hourly, datehour_posix == datetime & height == 0)
+  # Filter on datetime
+  filtered_data_vertical <- subset(TOMST_hourly, datehour_posix == datetime)
 
   T_soil_deep <<- mean(filtered_data$Tsoi) + 273.15
 
-  # Extract datetime of interest and output columns
+  # Extract TOMST sensors of interest and output columns for horizontal measurements
   TOMST_air_output <- filtered_data[grepl("^C", filtered_data$name),  c("D_edge", "Tair", 'Tsoi')]
+
+  # Extract TOMST sensors of interest and output columns for vertical measurements
+  TOMST_air_output_vertical <- filtered_data_vertical[grepl("^V", filtered_data_vertical$name) | filtered_data_vertical$name == "C75",
+                                                      c("Tair", "height")]
+
+
 
   # To define multiple T_soil_deep along the transect
   # x_new = 1:135
@@ -123,8 +177,9 @@ import_soil_temperature <- function(){
   # # Repeat the Tsoi value closest to the edge 15 times to cover the soil between forest edge and max X (over the street)
   # T_soil_deep <<- c(Tsoi_interp$Tsoi, rep(Tsoi_interp$Tsoi[length(Tsoi_interp$Tsoi)], 15)) + 273.15
 
-  # Save dataframe as CSV
+  # Save dataframes as CSV
   write.csv(TOMST_air_output, "Data/TOMST_filtered_distance_temp.csv", row.names = FALSE)
+  write.csv(TOMST_air_output_vertical, "Data/TOMST_filtered_height_temp.csv", row.names = FALSE)
 
 }
 

@@ -15,12 +15,12 @@ model_times <- lubridate::ymd_h(c("2023-07-08 00", "2023-07-08 04", "2023-07-08 
                                 "2023-07-08 12", "2023-07-08 16", "2023-07-08 20"))
 
 res_list   <- list(
-  readRDS("Data/data_for_animation/model_results_0h.rds"),
-  readRDS("Data/data_for_animation/model_results_4h.rds"),
-  readRDS("Data/data_for_animation/model_results_8h.rds"),
-  readRDS("Data/data_for_animation/model_results_12h.rds"),
-  readRDS("Data/data_for_animation/model_results_16h.rds"),
-  readRDS("Data/data_for_animation/model_results_20h.rds")
+  readRDS("Data/data_for_animation/model_results_0h_vox.rds"),
+  readRDS("Data/data_for_animation/model_results_4h_vox.rds"),
+  readRDS("Data/data_for_animation/model_results_8h_vox.rds"),
+  readRDS("Data/data_for_animation/model_results_12h_vox.rds"),
+  readRDS("Data/data_for_animation/model_results_16h_vox.rds"),
+  readRDS("Data/data_for_animation/model_results_20h_vox.rds")
 )
 
 tomst_files <- c(
@@ -163,4 +163,4 @@ anim <- animate(
   res      = 150,
   renderer = gifski_renderer()
 )
-anim_save("Output/temperature_sunmoon.gif", anim)
+anim_save("Output/animated_timeseries_with_grid_from_vox.gif", anim)

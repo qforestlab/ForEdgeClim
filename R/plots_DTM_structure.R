@@ -48,9 +48,9 @@ plots_dtm_struct <- function(dtm, grid, output_path){
 
   density_plot = ggplot(average_density, aes(x = X, y = Z, fill = mean_density)) +
     geom_tile(aes(fill = ifelse(mean_density == 0, NA, mean_density)), na.rm = TRUE) +
-    scale_fill_gradientn(
-      colors = c("lightblue", "darkgoldenrod1", "darkorange", "darkolivegreen2", "darkgreen"),
-      values = rescale(c(0, 0.1, 0.4, 0.6, 1)),
+    scale_fill_gradient(
+      low = "lightgreen",
+      high = "darkgreen",
       na.value = "lightblue",
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")
     ) +

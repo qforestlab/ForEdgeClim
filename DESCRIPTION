@@ -16,6 +16,7 @@ Imports:
     suncalc,
     lidR,
     data.table,
+    ggtext,
     Rcpp, 
     RcppArmadillo
 LinkingTo: 

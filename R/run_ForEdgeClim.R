@@ -198,7 +198,6 @@ run_foredgeclim <- function(structure_grid) {
     # ENERGY BALANCE #
     ##################
 
-    # Surface energy balance with ground flux for Z == 1 layer
     energy_balance_surf <- net_radiation - sensible_flux - latent_flux
     #print(paste0('   Max E_bal error = ', round(max(abs(energy_balance_surf)), 2)))
     error_current = max(abs(energy_balance_surf))

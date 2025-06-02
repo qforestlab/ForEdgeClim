@@ -8,9 +8,12 @@ create_input_drivers <- function(datetime) {
 
   # input files
   TLS_input_file <<- 'Data/2023-07-10_ForSe_Gontrode_5cm_transect_emma.las' #Off-ground&noise.las'
+  vox_input_file <<- 'Data/Density_AMAPVox.vox'
   TLS_filtered_file <<- 'Data/TLS_scaled_DTM_and_grid_July.rds'
+  vox_filtered_file <<- 'Data/vox_scaled_DTM_and_grid_July.rds'
   DTS_input_file <<- read.csv("Data/DTS_unfiltered/2023-07-08_09_hourly.csv")
   RMI_input_file <<- read.csv("Data/RMI_Melle.csv")
+  PE_input_file <<- "Data/Macro_temp_plant_eco.txt"
   pyr_input_file <<-  read.csv("Data/pyranometer_tower.dat", skip = 4, header = FALSE, stringsAsFactors = FALSE)
   TOMST_input_file <<- read_excel("Data/TOMST_hourly.xlsx")
   PAR_input_file <<- read_excel("Data/PAR_hourly.xlsx")
@@ -25,7 +28,7 @@ create_input_drivers <- function(datetime) {
   length_transect <<- 135
   height_canopy <<- 38
 
-  # parametes for energy balance convergence
+  # parameters for energy balance convergence
   energy_balance_tolerance <<- 2  # Maximum energy balance closure error between successive iteration steps to reach convergence (W/m2)
 
 }
