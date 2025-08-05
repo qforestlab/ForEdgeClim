@@ -48,7 +48,6 @@ for (current_datetime in datetime_series) {
   ######################
 
   # Import observations as input variables and as variables to compare the model with
-  import_DTS_observations()
   import_RMI_observations()
   import_pyr_observations()
   import_soil_temperature()

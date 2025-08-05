@@ -2,7 +2,8 @@
 % Please edit documentation in R/import_observations.R
 \name{import_RMI_observations}
 \alias{import_RMI_observations}
-\title{Function to import RMI national weather station observation (macro temperature)}
+\title{Function to import RMI national weather station observations (macro
+temperature and incoming longwave radiation)}
 \usage{
 import_RMI_observations(datetime)
 }
@@ -10,5 +11,6 @@ import_RMI_observations(datetime)
 macro temperature and downward from sky longwave radiation
 }
 \description{
-Function to import RMI national weather station observation (macro temperature)
+Function to import RMI national weather station observations (macro
+temperature and incoming longwave radiation)
 }

@@ -1,41 +1,5 @@
-#' Function to import hourly DTS data observations
-#'
-#' @return Filtered CSV file
-#' @importFrom dplyr mutate
-#' @importFrom lubridate ymd_hms with_tz
-#' @export
-import_DTS_observations <- function(datetime){
-
-  DTS_data <- DTS_input_file
-
-  # DTS data is collected in CET = UTC+1
-  DTS_data$datetime_brussels <- ymd_hms(paste(DTS_data$date, DTS_data$hour, "00", "00"), tz = "CET")
-
-  # Convert to UTC
-  DTS_data$datetime_utc <- with_tz(DTS_data$datetime_brussels, "UTC")
-
-  # Filter distances between 82 and 219 m (the transect line length, at 1m height from west to east)
-  DTS_data_filtered <- DTS_data[DTS_data$distance >= 82 & DTS_data$distance <= 219, ]
-
-  # Transform distance to 0 - 135 m scale
-  DTS_data_filtered$distance <- (DTS_data_filtered$distance - 82) / (219 - 82) * 135
-
-  # Reverse scaled distance from east to west
-  DTS_data_filtered$distance <- 135 - DTS_data_filtered$distance
-
-  # # Between 49 (52) and 62 (58) m there is a wooden construction that heats up the DTS fiber, we will remove these datapoints
-  # DTS_data_filtered <- DTS_data_filtered |>
-  #   mutate(temp = ifelse(distance >= 49 & distance <= 62, NA, temp))
-
-  # Extract datetime of interest and output columns
-  DTS_data_output <- DTS_data_filtered[DTS_data_filtered$datetime_utc == datetime, c("distance", "temp")]
-
-  # Save dataframe as CSV
-  write.csv(DTS_data_output, "Data/DTS_filtered_distance_temp.csv", row.names = FALSE)
-}
-
-
-#' Function to import RMI national weather station observation (macro temperature)
+#' Function to import RMI national weather station observations (macro
+#' temperature and incoming longwave radiation)
 #'
 #' @return macro temperature and downward from sky longwave radiation
 #' @importFrom lubridate ymd_hms ymd_hm floor_date
@@ -155,7 +119,8 @@ import_pyr_observations <- function(datetime){
 
 }
 
-#' Function to import TOMST observations (soil temperature at tower)
+#' Function to import TOMST observations (soil temperature at tower and
+#' observations along the transect)
 #'
 #' @return T_soil_deep The soil temperature at 6cm deep at the position of the tower
 #' @export

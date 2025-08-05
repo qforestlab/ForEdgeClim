@@ -7,11 +7,8 @@
 create_input_drivers <- function() {
 
   # input files
-  TLS_input_file <<- 'Data/2023-07-10_ForSe_Gontrode_5cm_transect_emma.las' #Off-ground&noise.las'
-  vox_input_file <<- 'Data/Density_AMAPVox.vox'
-  TLS_filtered_file <<- 'Data/TLS_scaled_DTM_and_grid_July.rds'
-  vox_filtered_file <<- 'Data/vox_scaled_DTM_and_grid_July.rds'
-  DTS_input_file <<- read.csv("Data/DTS_unfiltered/2023-07-08_09_hourly.csv")
+  TLS_input_file <<- 'Data/2025-01-10_ForSe_Gontrode_5cm_transect_emma.las'
+  TLS_filtered_file <<- 'Data/TLS_scaled_DTM_and_grid_January2025.rds'
   RMI_input_file <<- read.csv("Data/RMI_Melle.csv")
   RMI_radiation_input_file <<- read.csv("Data/RMI_radiation.csv", sep = "|")
   PE_input_file <<- "Data/Macro_temp_plant_eco.txt"

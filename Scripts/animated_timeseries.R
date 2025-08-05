@@ -15,12 +15,12 @@ model_times <- lubridate::ymd_h(c("2023-07-08 00", "2023-07-08 04", "2023-07-08 
                                 "2023-07-08 12", "2023-07-08 16", "2023-07-08 20"))
 
 res_list   <- list(
-  readRDS("Data/data_for_animation/model_results_0h_vox.rds"),
-  readRDS("Data/data_for_animation/model_results_4h_vox.rds"),
-  readRDS("Data/data_for_animation/model_results_8h_vox.rds"),
-  readRDS("Data/data_for_animation/model_results_12h_vox.rds"),
-  readRDS("Data/data_for_animation/model_results_16h_vox.rds"),
-  readRDS("Data/data_for_animation/model_results_20h_vox.rds")
+  readRDS("Data/data_for_animation/model_results_0h.rds"),
+  readRDS("Data/data_for_animation/model_results_4h.rds"),
+  readRDS("Data/data_for_animation/model_results_8h.rds"),
+  readRDS("Data/data_for_animation/model_results_12h.rds"),
+  readRDS("Data/data_for_animation/model_results_16h.rds"),
+  readRDS("Data/data_for_animation/model_results_20h.rds")
 )
 
 tomst_files <- c(
@@ -87,21 +87,6 @@ label_df <- anim_df %>%
     y =  Inf        # upper edge panel
   )
 
-# # data frame for position of sun and moon image
-# pos_df <- anim_df %>%
-#   distinct(time, time_lbl) %>%
-#   mutate(
-#     hour   = hour(time),
-#     is_day = hour >= 6 & hour < 18,
-#     frac   = case_when(
-#       is_day     ~ (hour - 6) / 12,
-#       hour >= 18 ~ (hour - 18) / 12,
-#       TRUE       ~ (hour + 6) / 12
-#     ),
-#     x_sky = (1 - frac) * max(anim_df$x),
-#     y_sky = 15 + sin(frac * pi) * (32 - 15),
-#     image = ifelse(is_day, "Data/data_for_animation/sun.png", "Data/data_for_animation/moon.png")
-#   )
 
 # animation plot
 p_anim <- ggplot(anim_df, aes(x = x, y = temperature, color = model, group = model)) +
@@ -119,14 +104,6 @@ p_anim <- ggplot(anim_df, aes(x = x, y = temperature, color = model, group = mod
     size        = 10
   ) +
 
-  # # dynamic sun and moon
-  # geom_image(
-  #   data = pos_df,
-  #   aes(x = x_sky, y = y_sky, image = image),
-  #   inherit.aes = FALSE,
-  #   size = 0.1,
-  #   by = "width"
-  # ) +
 
   scale_color_manual(values = c(
     "Modelled (every 1m)"            = "cornflowerblue",
@@ -163,4 +140,4 @@ anim <- animate(
   res      = 150,
   renderer = gifski_renderer()
 )
-anim_save("Output/animated_timeseries_with_grid_from_vox.gif", anim)
+anim_save("Output/animated_timeseries.gif", anim)

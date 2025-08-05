@@ -2,7 +2,8 @@
 % Please edit documentation in R/import_observations.R
 \name{import_soil_temperature}
 \alias{import_soil_temperature}
-\title{Function to import TOMST observations (soil temperature at tower)}
+\title{Function to import TOMST observations (soil temperature at tower and
+observations along the transect)}
 \usage{
 import_soil_temperature(datetime)
 }
@@ -10,5 +11,6 @@ import_soil_temperature(datetime)
 T_soil_deep The soil temperature at 6cm deep at the position of the tower
 }
 \description{
-Function to import TOMST observations (soil temperature at tower)
+Function to import TOMST observations (soil temperature at tower and
+observations along the transect)
 }

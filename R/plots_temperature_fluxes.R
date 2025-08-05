@@ -133,22 +133,17 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
   vertical <- temp_air_grid |>
     filter(x == 75, y == 15, z <= 35)
 
-  # DTS observations
-  DTS <- read.csv("Data/DTS_filtered_distance_temp.csv")
-
   # TOMST observations
   TOMST <- read.csv(paste0("Data/TOMST_filtered_distance_temp_", format(datetime, "%Y%m%d_%H%M"), ".csv"))
   TOMST_vertical <- read.csv(paste0("Data/TOMST_filtered_height_temp_", format(datetime, "%Y%m%d_%H%M"), ".csv"))
 
   # Add dataset lable
   reqhgt$model <- "Modelled (every 1m)"
-  DTS$model <- "DTS observations (every 0.25m)"
   TOMST$model <- "TOMST observations (every 15m)"
 
   # 1D graph:
   Temp_height <- ggplot() +
     geom_line(data = reqhgt, aes(x = x, y = temperature, color = "Modelled (every 1m)")) +
-    geom_line(data = DTS, aes(x = distance, y = temp, color = "DTS observations (every 0.25m)")) +
     geom_point(data = TOMST, aes(x = 135 - D_edge, y = Tair, color = "TOMST observations (every 15m)")) +
     geom_line(data = TOMST, aes(x = 135 - D_edge, y = Tair, color = "TOMST observations (every 15m)")) +
     labs(
@@ -157,7 +152,7 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
       y = "Temperature (°C)",
       caption = caption) +
     scale_color_manual(
-      values = c("Modelled (every 1m)" = "cornflowerblue", "DTS observations (every 0.25m)" = "red", "TOMST observations (every 15m)" = "darkgreen")
+      values = c("Modelled (every 1m)" = "cornflowerblue", "TOMST observations (every 15m)" = "darkgreen")
     ) +
     theme_bw() +
     theme(
@@ -176,7 +171,7 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
 
   ggsave(paste0(output_path, '/temp_air_reqhgt.png'), plot = Temp_height, width = 10, height = 6, dpi = 300)
 
-  # 1D graph with only TOMST horizontal observations to compare with:
+  # 1D graph for presentations:
   Temp_height_TOMST <- ggplot() +
     geom_line(data = reqhgt, aes(x = x, y = temperature, color = "Modelled (every 1m)")) +
     geom_point(data = TOMST, aes(x = 135 - D_edge, y = Tair, color = "TOMST observations (every 15m)")) +
@@ -200,13 +195,13 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
       axis.text.x    = element_text(size = 18),
       axis.text.y = element_markdown(size = 18)
     ) +
-    coord_cartesian(ylim = c(17, 31))
+    coord_cartesian(ylim = c(-5, 31))
 
   print(Temp_height_TOMST)
 
   ggsave(paste0(output_path, '/temp_air_reqhgt_TOMST.png'), plot = Temp_height_TOMST, width = 10, height = 6, dpi = 300)
 
-  # 1D graph with only TOMST vertical observations to compare with:
+  # 1D graph with TOMST vertical observations to compare with:
   Temp_vertical_TOMST <- ggplot() +
     geom_path(data = vertical, aes(x = temperature, y = z, color = "Modelled (every 1m)")) +
     geom_point(data = TOMST_vertical, aes(x = Tair, y = height, color = "TOMST observations (every 7m)")) +
