@@ -7,7 +7,7 @@
 saturated_vapor_pressure(temp)
 }
 \arguments{
-\item{temp}{Surface temperature}
+\item{temp}{Forest surface temperature}
 }
 \value{
 Saturated vapor pressure

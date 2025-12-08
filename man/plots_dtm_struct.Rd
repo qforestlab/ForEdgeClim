@@ -7,9 +7,11 @@
 plots_dtm_struct(dtm, grid, output_path)
 }
 \arguments{
-\item{output_path}{The output_path to store the plots}
+\item{dtm}{Dataframe with digital terrain model}
 
-\item{sw_rad_2D}{Dataframe with shortwave radiative values}
+\item{grid}{Dataframe with voxelized density values}
+
+\item{output_path}{The output_path to store the plots}
 }
 \value{
 Several radiation plots (plotted and saved)

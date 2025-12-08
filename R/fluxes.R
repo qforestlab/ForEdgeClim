@@ -43,7 +43,7 @@ calculate_D <- function(temp_air, temp_soil){
   # Zero-flux boundary condition at 'core boundaries', ie, min x, min y & max y.
   # At these boundaries the forest is assumed to continue indefinitely.
 
-  # Boundary conditions for x-direction (including eastern and western forest edge)
+  # Boundary conditions for x-direction (including eastern forest edge and western forest core)
   D_x[nx, , ] <-  h * area * (T_air_grid[nx, , ] - macro_temp) # Eastern edge (max x)
   D_x[1, , ] <- 0 # Western edge (min x)
 

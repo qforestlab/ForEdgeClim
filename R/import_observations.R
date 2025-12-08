@@ -38,51 +38,6 @@ import_RMI_observations <- function(datetime){
 
 }
 
-#' Function to import macro temperature from other platform
-#'
-#' @param datetime yyyy-mm-dd hh:mm:ss in UTC
-#' @return macro temperature
-#' @importFrom dplyr mutate filter summarise
-#' @importFrom lubridate dmy_hm with_tz hours
-#' @importFrom readr read_delim col_character locale cols col_double
-#' @export
-import_PE_observations <- function(datetime){
-
-  # read txt file
-  df <- read_delim(
-    PE_input_file,
-    delim     = "\t",
-    skip      = 1,
-    col_names = c("Date", "Time", "Temperature"),
-    locale    = locale(decimal_mark = ","),
-    col_types = cols(
-      Date        = col_character(),
-      Time        = col_character(),
-      Temperature = col_double()
-    )
-  )
-
-  # merge Date and Time to posixct object in Brussel's time zone
-  df <- df |>
-    mutate(
-      timestamp_local = dmy_hm(paste(Date, Time), tz = "Europe/Brussels"),
-      timestamp_utc = with_tz(timestamp_local, tzone = "UTC") # convert to UTC
-    )
-
-  target_utc <- datetime
-
-  # filter on 1h interval in UTC
-  result <- df |>
-    filter(timestamp_utc >= target_utc,
-           timestamp_utc <  target_utc + hours(1)) |>
-    summarise(
-      MeanTemperature = mean(Temperature, na.rm = TRUE)
-    )
-
-  macro_temp <<- result$MeanTemperature + 273.15 # in Kelvin
-
-}
-
 #' Function to import Delta-T pyranometer observations (direct and diffuse shortwave radiation)
 #'
 #' @param datetime yyyy-mm-dd hh:mm:ss in UTC

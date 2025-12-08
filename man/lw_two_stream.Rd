@@ -3,7 +3,7 @@
 \name{lw_two_stream}
 \alias{lw_two_stream}
 \title{Two-stream RTM for longwave radiation and for a single column existing of layers/voxels with density values (\%).
-This model is inspired by the longwave RTM of the Ecosystem Demography model.}
+This model is inspired by the longwave RTM of the Ecosystem Demography model (ED 2.2).}
 \usage{
 lw_two_stream(
   soil_reflect,
@@ -22,20 +22,24 @@ lw_two_stream(
 
 \item{density}{Density of each layer (\%)}
 
-\item{temperature}{Temperature of each layer (K)}
+\item{F_sky_lw}{Longwave radiation at top canopy (W/m2)}
 
-\item{Kd}{Diffuse extinction coefficient, per unit density}
+\item{temperature}{Forest surface temperature of each layer (K)}
 
-\item{omega}{Scattering coefficient}
+\item{T_soil}{Soil temperature at 8 cm depth (K)}
 
-\item{beta}{Fraction of scattering in the backward direction for diffuse radiation (\%)}
+\item{T_macro}{Macrotemperature outside the forest (K)}
 
-\item{F_sky_diff}{Diffuse radiation (W/m2)}
+\item{Kd}{Longwave extinction coefficient, per unit density}
+
+\item{omega}{Longwave scattering coefficient}
+
+\item{beta}{Fraction of scattering in the backward direction for longwave radiation (\%)}
 }
 \value{
-Dataframe containing the combined results of the 2D shortwave RTM
+Dataframe containing the combined results of the 2D longwave RTM
 }
 \description{
 Two-stream RTM for longwave radiation and for a single column existing of layers/voxels with density values (\%).
-This model is inspired by the longwave RTM of the Ecosystem Demography model.
+This model is inspired by the longwave RTM of the Ecosystem Demography model (ED 2.2).
 }

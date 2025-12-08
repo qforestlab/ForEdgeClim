@@ -42,7 +42,7 @@ sw_two_stream <- function(soil_reflect, density, F_sky_diff, F_sky_dir, Kd, Kb, 
   lambda[n+1] = 0
   # Kappa
   kappa_plus <- -((1 - (1 - 2 * beta) * omega)/ mu[1:n] + (1 - 2 * beta0) / mu0[1:n]) * omega * direct_radiation[2:(n+1)] / mu0[1:n]
-  kappa_plus[n+1] =  3*F_sky_dir
+  kappa_plus[n+1] =  -F_sky_dir
   kappa_minus = - ( (1-2*beta0)*(1-omega)/mu[1:n] + 1/mu0[1:n]) * omega*direct_radiation[2:(n+1)]/mu0[1:n]
   kappa_minus[n+1] = -F_sky_dir
   # Delta

@@ -67,7 +67,7 @@ p_RMSE <- ggplot() +
   # Captions
   labs(x = "Generation",
        y = "RMSE (°C)",
-       title = "a) RMSE evolution over generations",
+       title = "(a) RMSE evolution over generations",
        colour = NULL) +
   theme_bw(base_size = 14) +
   theme(
@@ -109,7 +109,7 @@ p_PCA_space <- ggplot(scores, aes(x = PC1, y = PC2)) +
   coord_equal() +
   facet_wrap(~iter, ncol = 8) +
   labs(
-    title = "b) PCA on parameter space",
+    title = "(b) PCA on parameter space",
     #subtitle = "Points = offspring,\nEllipse = 95% spread",
     x = "PC1", y = "\nPC2"
   ) +

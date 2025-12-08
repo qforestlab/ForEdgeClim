@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_grid_and_DTM_from_TLS.R
 \name{generate_DTM_grid_TLS}
 \alias{generate_DTM_grid_TLS}
-\title{Generate a voxelised point density grid from a LAS file}
+\title{Generate a voxelized point density grid from a LAS file}
 \usage{
 generate_DTM_grid_TLS(las_file, voxel_size = 1)
 }
@@ -21,6 +21,6 @@ based on the number of points in the point cloud. The output is a data.table con
 rescaled X, Y, and Z coordinates and a normalized density value.
 }
 \details{
-Additionally, a 3D plot of the voxel grid is generated and saved as a PNG file in
-the "Output" directory.
+Additionally, a 3D plot of the voxel grid and a digital terrain model (DTM) are generated and saved as PNG files in
+the "Output" directory, i.e. 'output_path' as defined by the user (see script 'testing_foredgeclim.R')
 }

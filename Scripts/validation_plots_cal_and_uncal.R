@@ -27,8 +27,9 @@ base_season <- "winter"   # summer | spring | autumn | winter
 
 # Build file map: names = model label, values = season-string used in filenames
 season_map <- c(
-  calibrated   = base_season,
-  uncalibrated = paste0(base_season, "_uncalibrated")
+  uncalibrated = paste0(base_season, "_uncalibrated"),
+  calibrated   = base_season
+
 )
 
 # -----------------
@@ -53,7 +54,9 @@ read_val <- function(season_string, model_label){
 }
 
 val_list <- imap(season_map, ~ read_val(.x, .y))  # .y = model label
-val_data_all <- bind_rows(val_list)
+val_data_all <- bind_rows(val_list) %>%
+  mutate(model = factor(model, levels = c("uncalibrated", "calibrated")))
+
 
 # For convenience keep the calibrated subset as before
 val_data <- val_data_all %>% filter(model == "calibrated")
@@ -98,7 +101,7 @@ m_o_time_and_position <- ggplot(val_data_all, aes(x = obs, y = mod)) +
   geom_point(alpha = 0.3, colour = "blue") +
   geom_abline(slope = 1, intercept = 0, colour = "red", linewidth = 1) +
   labs(x = "Observed temperature (°C)", y = "Modelled temperature (°C)",
-       title = "a) Modelled vs observed air temperature") +
+       title = "(a) Modelled vs observed air temperature") +
   theme_bw() +
   theme(plot.title = element_text(size = 40),
         axis.title = element_text(size = 40),
@@ -145,7 +148,7 @@ time_residual <- ggplot(val_data_all, aes(x = datetime, y = resid)) +
   geom_point(colour = "blue", alpha = 0.3) +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "red", linewidth = 1) +
   labs(y = "Residual (°C)", x = "Day (January 2023)",
-       title = "b) Time series of air temperature residuals") +
+       title = "(b) Time series of air temperature residuals") +
   theme_bw() +
   theme(plot.title = element_text(size = 40),
     axis.title = element_text(size = 40),

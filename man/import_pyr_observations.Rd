@@ -2,13 +2,16 @@
 % Please edit documentation in R/import_observations.R
 \name{import_pyr_observations}
 \alias{import_pyr_observations}
-\title{Function to import Delta-T pyranometer observations (direct and diffuse light)}
+\title{Function to import Delta-T pyranometer observations (direct and diffuse shortwave radiation)}
 \usage{
 import_pyr_observations(datetime)
+}
+\arguments{
+\item{datetime}{yyyy-mm-dd hh:mm:ss in UTC}
 }
 \value{
 Direct solar beam and diffuse radiation
 }
 \description{
-Function to import Delta-T pyranometer observations (direct and diffuse light)
+Function to import Delta-T pyranometer observations (direct and diffuse shortwave radiation)
 }

@@ -27,9 +27,9 @@ res_list   <- list(
 )
 
 tomst_files <- c(
-  "Output/2023-07-08_01/TOMST_filtered_distance_temp_20230708_0100.csv",
-  "Output/2023-07-08_08/TOMST_filtered_distance_temp_20230708_0800.csv",
-  "Output/2023-07-08_12/TOMST_filtered_distance_temp_20230708_1200.csv"
+  "Data/model_TOMST_result_files/TOMST_filtered_distance_temp_20230708_0100.csv",
+  "Data/model_TOMST_result_files/TOMST_filtered_distance_temp_20230708_0800.csv",
+  "Data/model_TOMST_result_files/TOMST_filtered_distance_temp_20230708_1200.csv"
 )
 
 tomst_times <- model_times
@@ -52,7 +52,7 @@ model_df <- bind_rows(
       transmute(
         x           = x,
         temperature = Tair - 273.15,
-        model       = "Modelled (every 1m)",
+        model       = "Modelled",
         time        = model_times[i]
       )
   })
@@ -65,7 +65,7 @@ tomst_df <- bind_rows(
       transmute(
         x           = 135 - D_edge,
         temperature = Tair,
-        model       = "TOMST observations (every 15m)",
+        model       = "Observed",
         time        = tomst_times[i]
       )
   })
@@ -88,7 +88,7 @@ label_df <- anim_df %>%
 anim_df$time_lbl <- factor(
   anim_df$time_lbl,
   levels = sort(unique(anim_df$time_lbl)),
-  labels = c("01h (~night)", "08h (~morning)", "12h (~noon)")
+  labels = c("01:00 UTC", "08:00 UTC", "12:00 UTC")
 )
 
 ####################
@@ -118,13 +118,13 @@ p_all <- ggplot(anim_df, aes(
 
   # Model-lines
   geom_line(
-    data = dplyr::filter(anim_df, model == "Modelled (every 1m)"),
+    data = dplyr::filter(anim_df, model == "Modelled"),
     linewidth = 1
   ) +
 
   # TOMST errorbars (±0.5 °C)
   geom_errorbar(
-    data = dplyr::filter(anim_df, model == "TOMST observations (every 15m)"),
+    data = dplyr::filter(anim_df, model == "Observed"),
     inherit.aes = FALSE,
     aes(x = x,
         ymin = temperature - 0.5,
@@ -139,45 +139,51 @@ p_all <- ggplot(anim_df, aes(
 
   # TOMST points
   geom_point(
-    data = dplyr::filter(anim_df, model == "TOMST observations (every 15m)"),
+    data = dplyr::filter(anim_df, model == "Observed"),
     size = 2.5
   ) +
 
   # scales and legends
   scale_colour_manual(
     name = "Time",
-    values = c("01h (~night)"   = "blue",
-               "08h (~morning)" = "orange",
-               "12h (~noon)"    = "red")
+    values = c("01:00 UTC"   = "blue",
+               "08:00 UTC" = "orange",
+               "12:00 UTC"    = "red")
   ) +
   scale_linetype_manual(
     name = "Source",
-    values = c("Modelled (every 1m)" = "solid",
-               "TOMST observations (every 15m)" = "blank")
+    values = c("Modelled" = "solid",
+               "Observed" = "blank")
   ) +
   scale_shape_manual(
     name = "Source",
-    values = c("Modelled (every 1m)" = NA,
-               "TOMST observations (every 15m)" = 16)
+    values = c("Modelled" = NA,
+               "Observed" = 16)
   ) +
   guides(
-    colour   = guide_legend(order = 1, title = "Time", direction = "horizontal",override.aes = list(size = 3)),
-    linetype = guide_legend(order = 2, title = "Source", direction = "horizontal", override.aes = list(linewidth  = 2)),
-    shape    = guide_legend(order = 2, title = "Source", direction = "horizontal", override.aes = list(size = 3))
+    colour   = guide_legend(order = 1, title = "Time: ", direction = "horizontal",override.aes = list(size = 3)),
+    linetype = guide_legend(order = 2, title = "Source: ", direction = "horizontal", override.aes = list(linewidth  = 2)),
+    shape    = guide_legend(order = 2, title = "Source: ", direction = "horizontal", override.aes = list(size = 3))
     ) +
   coord_cartesian(xlim = c(0, length_transect), ylim = c(15, 32)) +
-  labs(x = "Distance from forest core (m)", y = "Temperature (°C)") +
+  labs(x = "Distance from forest core (m)\n", y = "Temperature (°C)", title = "(a) Horizontal air temperature") +
   theme_bw(base_size = 18) +
   theme(
-    legend.position   = "top",
+    plot.title = element_text(size = 35),
+    legend.position   = "bottom",
     legend.box        = "vertical",
     axis.title      = element_text(size = 35),
     axis.text       = element_text(size = 35),
     panel.background  = element_rect(fill = NA, colour = NA),
     legend.title      = element_text(size = 35),
     legend.text       = element_text(size = 35),
-    legend.background = element_rect(fill = alpha("white", 0.7), colour = NA),
+    legend.box.margin = margin(10, 10, 10, 10),
+    legend.box.background = element_rect(
+      fill      = NA,
+      colour    = "black",
+      linewidth = 1
+    ),
     plot.margin       = margin(10, 20, 10, 10)
   )
 
-ggsave("Output/Tair_horizontal.png", p_all, width = 16, height = 9, dpi = 300)
+ggsave("Output/Tair_horizontal.png", p_all, width = 16, height = 12, dpi = 300)

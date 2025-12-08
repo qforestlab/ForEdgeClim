@@ -2,12 +2,12 @@
 % Please edit documentation in R/fluxes.R
 \name{calculate_H}
 \alias{calculate_H}
-\title{Function to calculate sensible heat transfer between surface and air}
+\title{Function to calculate sensible heat transfer between forest surface and air}
 \usage{
 calculate_H(T_surf, T_air)
 }
 \arguments{
-\item{T_surf}{Surface temperature}
+\item{T_surf}{Forest surface temperature}
 
 \item{T_air}{Air temperature}
 }
@@ -15,5 +15,5 @@ calculate_H(T_surf, T_air)
 H Sensible heat flux
 }
 \description{
-Function to calculate sensible heat transfer between surface and air
+Function to calculate sensible heat transfer between forest surface and air
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_grid_from_fiction.R
 \name{generate_fictive_grid}
 \alias{generate_fictive_grid}
-\title{Generate a virtual sctructural grid with trees}
+\title{Generate a virtual structural grid with trees}
 \usage{
 generate_fictive_grid(season)
 }
@@ -21,5 +21,5 @@ generate_fictive_grid(season)
 A dataframe with the generated voxel structure
 }
 \description{
-Generate a virtual sctructural grid with trees
+Generate a virtual structural grid with trees
 }

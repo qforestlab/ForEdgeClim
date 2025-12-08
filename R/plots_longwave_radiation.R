@@ -13,6 +13,12 @@ plots_lw <- function(lw_rad_2D, output_path){
   # 2D RTM plots
   ##############
 
+  # background image
+  img  <- png::readPNG("Output/horizontal_transect_2.png")
+  img[,,4] <- img[,,4] *0.3 # make transparent
+  bg_grob <- grid::rasterGrob(img, width = unit(1, "npc"), height = unit(1, "npc"))
+
+
   # Calculate averages across Y-slices
   final_avg_results_2D <- lw_rad_2D |>
     group_by(X, Z) |>
@@ -28,39 +34,68 @@ plots_lw <- function(lw_rad_2D, output_path){
   # F_d_down plot:
   F_d_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_down)) +
     geom_tile() +
+    annotation_custom(
+      grob = bg_grob,
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
+    ) +
+    annotate("segment", x = 5, xend = 145, y = 44, yend = 44,
+             arrow = arrow(ends = "both", type = "closed", length = unit(0.3, "cm")),
+             linewidth = 1.2) +
+    annotate("text", x = 29,  y = 40,
+             label = "towards forest core", size = 5) +
+    annotate("text", x = 120, y = 40,
+             label = "towards forest edge", size = 5) +
     scale_fill_viridis_c(option = "inferno",
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("Vertical & lateral diffuse LW downward radiation, averaged across Y-slices"),
-         x = "X (m)", y = "Z (m)", fill = "LW down (W/m²)",
-         caption = caption) +
+    labs(title = paste("(a) Longwave downward radiation"),
+         x = "\n", y = "Height (m)\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) ) +#,
+         #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
-      plot.caption = element_text(hjust = 0, color = "black")
+      plot.title = element_text(size = 20),
+      plot.caption = element_text(hjust = 0, color = "black"),
+      axis.title = element_text(size = 20),
+      axis.text = element_text(size = 16),
+      strip.text = element_text(size = 18),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16)
     )
 
   print(F_d_down)
 
-  ggsave(paste0(output_path, '/LW_2D_F_d_down.png'), plot = F_d_down, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/LW_2D_F_d_down.png'), plot = F_d_down, width = 9, height = 3, dpi = 500)
 
 
   # F_d_up plot:
   F_d_up = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_up)) +
     geom_tile() +
+    annotation_custom(
+      grob = bg_grob,
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
+    ) +
     scale_fill_viridis_c(option = "inferno",
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("Vertical & lateral diffuse LW upward radiation, averaged across Y-slices"),
-         x = "X (m)", y = "Z (m)", fill = "LW up (W/m²)",
-         caption = caption) +
+    labs(title = paste("(b) Longwave upward radiation"),
+         x = "\nDistance from forest core", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) )+ #,
+         #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
-      plot.caption = element_text(hjust = 0, color = "black")
+      plot.title = element_text(size = 20),
+      plot.caption = element_text(hjust = 0, color = "black"),
+      axis.title = element_text(size = 20),
+      axis.text = element_text(size = 16),
+      strip.text = element_text(size = 18),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16)
     )
 
   print(F_d_up)
 
-  ggsave(paste0(output_path, '/LW_2D_F_d_up.png'), plot = F_d_up, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/LW_2D_F_d_up.png'), plot = F_d_up, width = 9, height = 3, dpi = 500)
 
 
 

@@ -53,7 +53,7 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
 
   # background image
   img  <- png::readPNG("Output/horizontal_transect_2.png")
-  img[,,4] <- img[,,4] * 0.1 # make transparent
+  img[,,4] <- img[,,4] * 0.3 # make transparent
   bg_grob <- grid::rasterGrob(img, width = unit(1, "npc"), height = unit(1, "npc"))
 
   # 2D tile plot:
@@ -61,18 +61,25 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     geom_tile()+
     annotation_custom(
       grob = bg_grob,
-      xmin = -4, xmax = 150,
-      ymin = -1, ymax = 40
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
     ) +
+    annotate("segment", x = 5, xend = 145, y = 44, yend = 44,
+             arrow = arrow(ends = "both", type = "closed", length = unit(0.3, "cm")),
+             linewidth = 1.2) +
+    annotate("text", x = 29,  y = 40,
+             label = "towards forest core", size = 5) +
+    annotate("text", x = 120, y = 40,
+             label = "towards forest edge", size = 5) +
     scale_fill_gradientn(
       colors = colors,
       values = rescale(c(0.25, 0.5, 0.75, 1)),
       #limits = c(26, 44),
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("b) Forest surface temperature"),
-        y = "Height (m)\n ", x = "\n", fill = "Temperature (°C)")+#,
+    labs(title = paste("(c) Forest surface temperature"),
+         x = "\nDistance from forest core (m)", y = "\n", fill = "Temperature (°C)")+#,
          #caption = caption)+
-    coord_fixed(ratio = 1) +
+    coord_fixed(ratio = 1, clip = "off") +
     theme_bw() +
     theme(
       plot.title = element_text(size = 20),
@@ -81,12 +88,14 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
       axis.text = element_text(size = 16),
       strip.text = element_text(size = 18),
       legend.title = element_text(size = 18),
-      legend.text  = element_text(size = 16)
-    )
+      legend.text  = element_text(size = 16),
+      legend.position = "right"
+      )
+
 
   print(temp_surf_plot)
 
-  ggsave(paste0(output_path, '/temp_surface.png'), plot = temp_surf_plot, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/temp_surface.png'), plot = temp_surf_plot, width = 9, height = 3, dpi = 500)
 
 
   # Calculate the average of the soil temperature over all y-slices for each combination of x and z
@@ -102,19 +111,25 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
       colors = colors,
       values = rescale(c(0.25, 0.5, 0.75, 1)),
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("Soil temperature, averaged across Y-slices"),
-         x = "X (m)", y = "Z (m)", fill = "Temperature (°C)",
-         caption = caption)+
+    labs(title = paste("Soil temperature"),
+         x = "Distance from forest core (m)", y = "\n", fill = "Temperature (°C)") +
+        # caption = caption)+
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
+      plot.title = element_text(size = 20),
       plot.caption = element_text(hjust = 0, color = "black"),
-      axis.text.y = element_blank()
+      axis.title = element_text(size = 20),
+      axis.text.x = element_text(size = 16),
+      axis.text.y = element_blank(),
+      strip.text = element_text(size = 18),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16)
     )
 
   print(temp_soil_plot)
 
-  ggsave(paste0(output_path, '/temp_soil.png'), plot = temp_soil_plot, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/temp_soil.png'), plot = temp_soil_plot, width = 9, height = 3, dpi = 500)
 
   # Calculate the average of the air temperature over all y-slices for each combination of x and z
   average_air_temperature <- temp_air_grid |>
@@ -126,16 +141,16 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     geom_tile()+
     annotation_custom(
       grob = bg_grob,
-      xmin = -4, xmax = 150,
-      ymin = -1, ymax = 40
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
     ) +
     scale_fill_gradientn(
       colors = colors,
       values = rescale(c(0.25, 0.5, 0.75, 1)),
       #limits = c(26, 44),
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("c) Air temperature"),
-         x = "\nDistance from forest core (m)", y = "\n", fill = "Temperature (°C)")+#,
+    labs(title = paste("(b) Air temperature"),
+         y = "Height (m)\n ", x = "\n", fill = "Temperature (°C)")+#,
          #caption = caption )+
     coord_fixed(ratio = 1) +
     theme_bw() +
@@ -150,7 +165,7 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     )
   print(temp_air_plot)
 
-  ggsave(paste0(output_path, '/temp_air.png'), plot = temp_air_plot, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/temp_air.png'), plot = temp_air_plot, width = 9, height = 3, dpi = 500)
 
 
 }

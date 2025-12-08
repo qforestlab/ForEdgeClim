@@ -3,7 +3,7 @@
 \name{sw_two_stream}
 \alias{sw_two_stream}
 \title{Two-stream RTM for shortwave radiation and for a single column existing of layers/voxels with density values (\%).
-This model is inspired by the shortwave RTM of the Ecosystem Demography model.}
+This model is inspired by the shortwave RTM of the Ecosystem Demography model (ED 2.2).}
 \usage{
 sw_two_stream(
   soil_reflect,
@@ -30,7 +30,7 @@ sw_two_stream(
 
 \item{Kb}{Direct beam extinction coefficient, per unit density}
 
-\item{omega}{Scattering coefficient}
+\item{omega}{Shortwave scattering coefficient}
 
 \item{beta}{Fraction of scattering in the backward direction for diffuse radiation (\%)}
 
@@ -41,5 +41,5 @@ Dataframe containing the combined results of the 2D shortwave RTM
 }
 \description{
 Two-stream RTM for shortwave radiation and for a single column existing of layers/voxels with density values (\%).
-This model is inspired by the shortwave RTM of the Ecosystem Demography model.
+This model is inspired by the shortwave RTM of the Ecosystem Demography model (ED 2.2).
 }

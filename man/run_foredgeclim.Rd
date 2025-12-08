@@ -7,7 +7,9 @@
 run_foredgeclim(structure_grid, datetime)
 }
 \arguments{
-\item{input_data}{Dataframe with input variables}
+\item{structure_grid}{Dataframe with structural density values}
+
+\item{datetime}{Datetime object representing the current simulation time}
 }
 \value{
 Dataframe with simulated microclimate temperatures and fluxes

@@ -25,6 +25,8 @@ plots_flux(
 
 \item{output_path}{The output_path to store the plots}
 
+\item{datetime}{yyyy-mm-dd hh:mm:ss in UTC}
+
 \item{net_radiaiton}{Vector with net radiation}
 }
 \value{

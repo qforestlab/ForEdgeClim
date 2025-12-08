@@ -15,7 +15,7 @@ plots_sw <- function(sw_rad_2D, output_path){
 
   # background image
   img  <- png::readPNG("Output/horizontal_transect_2.png")
-  img[,,4] <- img[,,4] * 0.1 # make transparent
+  img[,,4] <- img[,,4] *0.3 # make transparent
   bg_grob <- grid::rasterGrob(img, width = unit(1, "npc"), height = unit(1, "npc"))
 
   # Calculate averages across Y-slices
@@ -34,54 +34,82 @@ plots_sw <- function(sw_rad_2D, output_path){
 
   # F_d_down plot:
   F_d_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_down)) +
-    geom_tile() +
+    geom_tile()+
+    annotation_custom(
+      grob = bg_grob,
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
+    ) +
     scale_fill_viridis_c(option = "inferno",
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("Vertical & lateral diffuse downward radiation, averaged across Y-slices"),
-         x = "X (m)", y = "Z (m)", fill = "SW diffuse down (W/m²)",
-         caption = caption) +
+    labs(title = paste("(b) Shortwave diffuse downward radiation"),
+         x = "\n", y = "Height (m)\n", fill = bquote("Flux"~(W~m^{-2})*"      ") )+#,
+         #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
-      plot.caption = element_text(hjust = 0, color = "black")
+      plot.title = element_text(size = 20),
+      plot.caption = element_text(hjust = 0, color = "black"),
+      axis.title = element_text(size = 20),
+      axis.text = element_text(size = 16),
+      strip.text = element_text(size = 18),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16)
     )
 
   print(F_d_down)
 
-  ggsave(paste0(output_path, '/SW_2D_F_d_down.png'), plot = F_d_down, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/SW_2D_F_d_down.png'), plot = F_d_down, width = 9, height = 3, dpi = 500)
 
 
   # F_d_up plot:
   F_d_up = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_up)) +
-    geom_tile() +
+    geom_tile()+
+    annotation_custom(
+      grob = bg_grob,
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
+    ) +
+    annotate("segment", x = 5, xend = 145, y = 44, yend = 44,
+             arrow = arrow(ends = "both", type = "closed", length = unit(0.3, "cm")),
+             linewidth = 1.2) +
+    annotate("text", x = 29,  y = 40,
+             label = "towards forest core", size = 5) +
+    annotate("text", x = 120, y = 40,
+             label = "towards forest edge", size = 5) +
     scale_fill_viridis_c(option = "inferno",
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("Vertical & lateral diffuse upward radiation, averaged across Y-slices"),
-         x = "X (m)", y = "Z (m)", fill = "SW diffuse up (W/m²)",
-         caption = caption) +
+    labs(title = paste("(c) Shortwave diffuse upward radiation"),
+         x = "\nDistance from forest core", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      ") )+#,
+         #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
-      plot.caption = element_text(hjust = 0, color = "black")
+      plot.title = element_text(size = 20),
+      plot.caption = element_text(hjust = 0, color = "black"),
+      axis.title = element_text(size = 20),
+      axis.text = element_text(size = 16),
+      strip.text = element_text(size = 18),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16)
     )
 
   print(F_d_up)
 
-  ggsave(paste0(output_path, '/SW_2D_F_d_up.png'), plot = F_d_up, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/SW_2D_F_d_up.png'), plot = F_d_up, width = 9, height = 3, dpi = 500)
 
   # F_b_down plot:
   F_b_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_b_down)) +
     geom_tile()+
     annotation_custom(
       grob = bg_grob,
-      xmin = -4, xmax = 150,
-      ymin = -1, ymax = 40
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
     ) +
     scale_fill_viridis_c(option = "inferno",
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("a) Direct solar beam downward radiation"),
-         fill  = bquote("Flux (W m"^-2*")       "), x = "\n", y = "\n")+#,
-        # caption = caption) +
+    labs(title = paste("(a) Shortwave direct-beam radiation"),
+         fill  = bquote("Flux"~(W~m^{-2})*"      "), x = "\n", y = "\n")+
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
@@ -96,25 +124,36 @@ plots_sw <- function(sw_rad_2D, output_path){
 
   print(F_b_down)
 
-  ggsave(paste0(output_path, '/SW_2D_F_b_down.png'), plot = F_b_down, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/SW_2D_F_b_down.png'), plot = F_b_down, width = 9, height = 3, dpi = 500)
 
   # F_d_down + F_b_down plot:
   F_b_d_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_down + avg_F_b_down)) +
     geom_tile() +
+    annotation_custom(
+      grob = bg_grob,
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
+    ) +
     scale_fill_viridis_c(option = "inferno",
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
-    labs(title = paste("Vertical & lateral, direct & diffuse downward radiation, averaged across Y-slices"),
-         x = "X (m)", y = "Z (m)", fill = "SW down (W/m²)",
-         caption = caption) +
+    labs(title = paste("Direct beam & diffuse downward radiation"),
+         x = "Distance from forest core (m)", y = "Height (m)", fill = bquote(Flux~(W~m^{-2})) )+ #,
+         #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
-      plot.caption = element_text(hjust = 0, color = "black")
+      plot.title = element_text(size = 20),
+      plot.caption = element_text(hjust = 0, color = "black"),
+      axis.title = element_text(size = 20),
+      axis.text = element_text(size = 16),
+      strip.text = element_text(size = 18),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16)
     )
 
   print(F_b_d_down)
 
-  ggsave(paste0(output_path, '/SW_2D_F_b_d_down.png'), plot = F_b_d_down, width = 9, height = 3, dpi = 300)
+  ggsave(paste0(output_path, '/SW_2D_F_b_d_down.png'), plot = F_b_d_down, width = 9, height = 3, dpi = 500)
 
 
 }

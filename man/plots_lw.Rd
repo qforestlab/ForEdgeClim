@@ -7,9 +7,9 @@
 plots_lw(lw_rad_2D, output_path)
 }
 \arguments{
-\item{output_path}{The output_path to store the plots}
+\item{lw_rad_2D}{Dataframe with longwave radiative values}
 
-\item{sw_rad_2D}{Dataframe with shortwave radiative values}
+\item{output_path}{The output_path to store the plots}
 }
 \value{
 Several radiation plots (plotted and saved)

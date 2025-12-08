@@ -7,6 +7,9 @@ temperature and incoming longwave radiation)}
 \usage{
 import_RMI_observations(datetime)
 }
+\arguments{
+\item{datetime}{yyyy-mm-dd hh:mm:ss in UTC}
+}
 \value{
 macro temperature and downward from sky longwave radiation
 }

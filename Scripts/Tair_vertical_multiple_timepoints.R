@@ -28,9 +28,9 @@ res_list   <- list(
 )
 
 tomst_files <- c(
-  "Output/2023-07-08_01/TOMST_filtered_height_temp_20230708_0100.csv",
-  "Output/2023-07-08_08/TOMST_filtered_height_temp_20230708_0800.csv",
-  "Output/2023-07-08_12/TOMST_filtered_height_temp_20230708_1200.csv"
+  "Data/model_TOMST_result_files/TOMST_filtered_height_temp_20230708_0100.csv",
+  "Data/model_TOMST_result_files/TOMST_filtered_height_temp_20230708_0800.csv",
+  "Data/model_TOMST_result_files/TOMST_filtered_height_temp_20230708_1200.csv"
 )
 
 tomst_times <- model_times
@@ -50,7 +50,7 @@ model_df <- bind_rows(
       transmute(
         z           = z,
         temperature = Tair - 273.15,
-        model       = "Modelled (every 1m)",
+        model       = "Modelled",
         time        = model_times[i]
       )
   })
@@ -63,7 +63,7 @@ tomst_df <- bind_rows(
       transmute(
         z           = height,
         temperature = Tair,
-        model       = "TOMST observations (every 7m)",
+        model       = "Observed",
         time        = tomst_times[i]
       )
   })
@@ -119,7 +119,7 @@ p_vert <- ggplot() +
 
   # Model as path
   geom_path(
-    data = dplyr::filter(anim_df, model == "Modelled (every 1m)"),
+    data = dplyr::filter(anim_df, model == "Modelled"),
     aes(x = temperature, y = z, colour = time_lbl,
         linetype = model, shape = model, group = interaction(model, time_lbl)),
     linewidth = 1
@@ -127,7 +127,7 @@ p_vert <- ggplot() +
 
   # TOMST errorbars (±0.5 °C)
   geom_segment(
-    data = dplyr::filter(anim_df, model == "TOMST observations (every 7m)"),
+    data = dplyr::filter(anim_df, model == "Observed"),
     inherit.aes = FALSE,
     aes(x = temperature - 0.5, xend = temperature + 0.5,
         y = z, yend = z,
@@ -136,7 +136,7 @@ p_vert <- ggplot() +
     linewidth = 0.6, alpha = 0.9, show.legend = FALSE
   ) +
   geom_segment(
-    data = dplyr::filter(anim_df, model == "TOMST observations (every 7m)"),
+    data = dplyr::filter(anim_df, model == "Observed"),
     inherit.aes = FALSE,
     aes(x = temperature - 0.5, xend = temperature - 0.5,
         y = z - cap_h, yend = z + cap_h,
@@ -145,7 +145,7 @@ p_vert <- ggplot() +
     linewidth = 0.6, alpha = 0.9, show.legend = FALSE
   ) +
   geom_segment(
-    data = dplyr::filter(anim_df, model == "TOMST observations (every 7m)"),
+    data = dplyr::filter(anim_df, model == "Observed"),
     inherit.aes = FALSE,
     aes(x = temperature + 0.5, xend = temperature + 0.5,
         y = z - cap_h, yend = z + cap_h,
@@ -156,7 +156,7 @@ p_vert <- ggplot() +
 
   # TOMST-points
   geom_point(
-    data = dplyr::filter(anim_df, model == "TOMST observations (every 7m)"),
+    data = dplyr::filter(anim_df, model == "Observed"),
     aes(x = temperature, y = z, colour = time_lbl,
         linetype = model, shape = model, group = interaction(model, time_lbl)),
     size = 2.5
@@ -169,13 +169,13 @@ p_vert <- ggplot() +
   ) +
   scale_linetype_manual(
     name = "Source",
-    values = c("Modelled (every 1m)" = "solid",
-               "TOMST observations (every 7m)"  = "blank")
+    values = c("Modelled" = "solid",
+               "Observed"  = "blank")
   ) +
   scale_shape_manual(
     name = "Source",
-    values = c("Modelled (every 1m)" = NA,
-               "TOMST observations (every 7m)"  = 16)
+    values = c("Modelled" = NA,
+               "Observed"  = 16)
   ) +
   guides(
     colour   = guide_legend(order = 1, title = "Time", direction = "horizontal"),
@@ -183,9 +183,10 @@ p_vert <- ggplot() +
     shape    = guide_legend(order = 2, title = "Source", direction = "horizontal")
   ) +
   coord_cartesian(ylim = c(0, 35), xlim = c(temp_min, temp_max)) +
-  labs(x = "Temperature (°C)", y = "Height (m)") +
+  labs(x = "Temperature (°C)", y = "Height (m)", title = "(b) Vertical air temperature") +
   theme_bw(base_size = 18) +
   theme(
+    plot.title = element_text(size = 35),
     legend.position   = "top",
     legend.box        = "vertical",
     axis.title      = element_text(size = 35),
@@ -196,4 +197,18 @@ p_vert <- ggplot() +
     legend.background = element_rect(fill = alpha("white", 0.7), colour = NA)
   )
 
-ggsave("Output/Tair_vertical.png", p_vert, width = 16, height = 18, dpi = 300)
+p_vert <- p_vert +
+  #coord_cartesian(ylim = c(0, 38), xlim = c(temp_min, temp_max), clip = "off") +
+  annotate("segment",
+           x = temp_min + 0.5, xend = temp_min + 2,
+           y = 37, yend = 37,
+           colour = "black", linewidth = 1) +
+  annotate("segment",
+           x = temp_min + 3, xend = temp_min + 4.5,
+           y = 37, yend = 37,
+           colour = "black", linewidth = 1) +
+  theme(legend.position = "none",
+        plot.margin = margin(t = 10, r = 10, b = 10, l = 10))
+
+
+ggsave("Output/Tair_vertical.png", p_vert, width = 9, height = 11, dpi = 300)

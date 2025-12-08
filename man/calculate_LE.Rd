@@ -7,7 +7,7 @@
 calculate_LE(temperature, net_rad)
 }
 \arguments{
-\item{temperature}{Surface temperature}
+\item{temperature}{Forest surface temperature}
 
 \item{net_rad}{Net radiation}
 }

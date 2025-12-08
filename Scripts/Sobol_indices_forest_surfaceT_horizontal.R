@@ -128,9 +128,9 @@ all_colors <- c(
 labels_latex <- c(
   "infl_macro"    = TeX("$i_m$"),
   "infl_soil"     = TeX("$i_s$"),
-  "g_macro"       = TeX("$i_m$"),
+  "g_macro"       = TeX("$g_m$"),
   "k_soil"        = TeX("$k_s$"),
-  "infl_forest"   = TeX("$I_f$"),
+  "infl_forest"   = TeX("$i_f$"),
   "g_soil"        = TeX("$g_s$"),
   "h"             = TeX("$h$"),
   "p_ground"      = TeX("$p$"),
@@ -247,7 +247,7 @@ p_condition_focused_n <- ggplot(mean_combined_focusedplus_n, aes(x = mean_index,
   facet_wrap(~ group, scales = "free_y", ncol = 1) +
   scale_fill_manual(values = all_colors, labels = labels_latex) +
   labs(
-    title = "b) Influence on forest surface temperature",
+    title = "(b) Influence on forest surface temperature",
     x = "Average normalized total-order Sobol-index",
     y = "Condition",
     fill = "Parameter"#,
@@ -343,8 +343,17 @@ avg_param_by_season  <- sobol_df %>% filter(!is.na(season)) %>%
   group_by(season, parameter) %>%
   summarise(mean_index = mean(norm_value), sd_index = sd(norm_value), .groups = "drop")
 
-# get ranges on the contributions for top 3 parameters across conditions
-target_params <- c("infl_macro", "infl_soil", "g_forest")
+# get ranges on the contributions for top 4 parameters across conditions
+target_params <- c("infl_macro", "infl_soil", "g_forest", "g_macro")
+# top 1 parameter
+#target_params <- c("infl_macro", "infl_soil")
+# # SW parameters:
+#target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
+# # LW parameters:
+#target_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
+# rad params
+# target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h",
+#                    "e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 
 range_metric <- avg_param_by_metric %>%
   filter(parameter %in% target_params) %>%
@@ -442,9 +451,9 @@ range_metric_rank <- rank_consistency_metric %>%
     max_sd_rank   = max(sd_rank)
   )
 
-print(range_metric_rank)
-print(range_moment_rank)
-print(range_season_rank)
+# print(range_metric_rank)
+# print(range_moment_rank)
+# print(range_season_rank)
 
 #------------------------------------------------------------------------------
 

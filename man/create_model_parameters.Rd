@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_drivers_constants_parameters.R
 \name{create_model_parameters}
 \alias{create_model_parameters}
-\title{Generate ForEdgeClim model parameters (to be calibrated)}
+\title{Generate ForEdgeClim model parameters}
 \usage{
 create_model_parameters()
 }
@@ -10,5 +10,5 @@ create_model_parameters()
 model parameters
 }
 \description{
-Generate ForEdgeClim model parameters (to be calibrated)
+Generate ForEdgeClim model parameters
 }

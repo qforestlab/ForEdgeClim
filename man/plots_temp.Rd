@@ -12,6 +12,8 @@ plots_temp(micro_grid, T_air_vec, output_path, datetime)
 \item{T_air_vec}{Vector with air temperatures}
 
 \item{output_path}{The output_path to store the plots}
+
+\item{datetime}{yyyy-mm-dd hh:mm:ss in UTC}
 }
 \value{
 Several temperature plots (plotted and saved)

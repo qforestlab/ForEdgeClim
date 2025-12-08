@@ -7,10 +7,12 @@
 de_dT(temp, net_rad)
 }
 \arguments{
-\item{temp}{Surface temperature}
+\item{temp}{Forest surface temperature}
+
+\item{net_rad}{Net radiation}
 }
 \value{
-Derivative of energy balance wrt surface temperature
+Derivative of energy balance wrt forest surface temperature
 }
 \description{
 Function to calculate the derivative of the energy balance closure error to surface temperature

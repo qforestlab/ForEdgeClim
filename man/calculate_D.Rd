@@ -2,7 +2,7 @@
 % Please edit documentation in R/fluxes.R
 \name{calculate_D}
 \alias{calculate_D}
-\title{Function to simulate air to air diffusion via heat diffusion equation. This is done in 3D.
+\title{Function to simulate air to air diffusion via Fourier's law of heat conduction. This is done in 3D.
 In this function, air temperature is updated and ready to use for the sensible heat flux calculation.}
 \usage{
 calculate_D(temp_air, temp_soil)
@@ -16,6 +16,6 @@ calculate_D(temp_air, temp_soil)
 total_diffusion Diffusion flux per voxel
 }
 \description{
-Function to simulate air to air diffusion via heat diffusion equation. This is done in 3D.
+Function to simulate air to air diffusion via Fourier's law of heat conduction. This is done in 3D.
 In this function, air temperature is updated and ready to use for the sensible heat flux calculation.
 }
