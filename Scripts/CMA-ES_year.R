@@ -32,11 +32,12 @@ start_analysis <- Sys.time()
 # -----------------
 
 # We calibrate on 3 days per season: the most sunny day, the most cloudy day
-# and the day with most solar fluctuations.
+# and the day with most solar fluctuations (respectively).
 
-date_string <- 'spring'
+date_string <- 'all_seasons_50_generations'
 
-all_datetimes <- c(
+## SPRING
+spring_datetimes <- c(
   seq(
     from = as.POSIXct("2025-04-30 00:00:00", tz = "UTC"),
     to   = as.POSIXct("2025-04-30 23:00:00", tz = "UTC"),
@@ -54,37 +55,120 @@ all_datetimes <- c(
   )
 )
 
-# For spring and autumn, there are 2 years to be taken into account,
-# for summer and winter, there is only 1 year.
+## WINTER
+winter_datetimes <- c(
+  seq(
+    from = as.POSIXct("2025-01-13 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2025-01-13 23:00:00", tz = "UTC"),
+    by   = "hour"
+  ),
+  seq(
+    from = as.POSIXct("2025-01-20 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2025-01-20 23:00:00", tz = "UTC"),
+    by   = "hour"
+  ),
+  seq(
+    from = as.POSIXct("2025-01-23 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2025-01-23 23:00:00", tz = "UTC"),
+    by   = "hour"
+  )
+)
+
+## AUTUMN
+autumn_datetimes <- c(
+  seq(
+    from = as.POSIXct("2023-10-01 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2023-10-01 23:00:00", tz = "UTC"),
+    by   = "hour"
+  ),
+  seq(
+    from = as.POSIXct("2024-10-09 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2024-10-09 23:00:00", tz = "UTC"),
+    by   = "hour"
+  ),
+  seq(
+    from = as.POSIXct("2023-10-19 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2023-10-19 23:00:00", tz = "UTC"),
+    by   = "hour"
+  )
+)
+
+## SUMMER
+summer_datetimes <- c(
+  seq(
+    from = as.POSIXct("2023-07-07 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2023-07-07 23:00:00", tz = "UTC"),
+    by   = "hour"
+  ),
+  seq(
+    from = as.POSIXct("2023-07-31 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2023-07-31 23:00:00", tz = "UTC"),
+    by   = "hour"
+  ),
+  seq(
+    from = as.POSIXct("2023-07-20 00:00:00", tz = "UTC"),
+    to   = as.POSIXct("2023-07-20 23:00:00", tz = "UTC"),
+    by   = "hour"
+  )
+)
+
+## ALL SEASONS TOGETHER
+all_datetimes <- c(
+  spring_datetimes,
+  summer_datetimes,
+  autumn_datetimes,
+  winter_datetimes
+)
+
+# Remove sunfleck-affected measurements (summer 07/07/2023 at 10:00 and 11:00 UTC)
+bad_datetimes <- as.POSIXct(
+  c("2023-07-07 10:00:00", "2023-07-07 11:00:00"),
+  tz = "UTC"
+)
+
+all_datetimes <- all_datetimes[!all_datetimes %in% bad_datetimes]
+
+
+# TLS-structures: use year-month keys (YYYY-MM)
 structures <- list(
-  `2024` = readRDS("Data/TLS_scaled_DTM_and_grid_April2024.rds"),
-  `2025` = readRDS("Data/TLS_scaled_DTM_and_grid_April2025.rds")
+  `2023-07` = readRDS("Data/TLS_scaled_DTM_and_grid_July2023.rds"),
+  `2023-10` = readRDS("Data/TLS_scaled_DTM_and_grid_October2023.rds"),
+  `2024-04` = readRDS("Data/TLS_scaled_DTM_and_grid_April2024.rds"),
+  `2024-10` = readRDS("Data/TLS_scaled_DTM_and_grid_October2024.rds"),
+  `2025-01` = readRDS("Data/TLS_scaled_DTM_and_grid_January2025.rds"),
+  `2025-04` = readRDS("Data/TLS_scaled_DTM_and_grid_April2025.rds")
 )
 
 scales <- c(
-  `2024` = 2.98 / 6.18,
-  `2025` = 2.24 / 6.18
+  `2023-07` = 5.91 / 6.18,
+  `2023-10` = 5.52 / 6.18,
+  `2024-04` = 2.98 / 6.18,
+  `2024-10` = 3.88 / 6.18,
+  `2025-01` = 2.05 / 6.18,
+  `2025-04` = 2.24 / 6.18
 )
 
-structures_scaled <- lapply(names(structures), function(yr){
-  vox <- structures[[yr]]
-  vox$grid$density <- vox$grid$density * scales[[yr]]
+structures_scaled <- lapply(names(structures), function(key){
+  vox <- structures[[key]]
+  vox$grid$density <- vox$grid$density * scales[[key]]
   vox
 })
 names(structures_scaled) <- names(structures)
 
 param_set <- "top_3"   # "all" | "focused" | "top_3"
 
-max_it        <- 39     # generations (there will be max_it + 1 generations)
+max_it        <- 49     # generations (there will be max_it + 1 generations)
 stop_fitness  <- 1      # RMSE target (°C)
 lambda        <- NULL   # if NULL we set a heuristic later
 
 # Output paths
 log_dir     <- file.path("Output", "calibration")
 if (!dir.exists(log_dir)) dir.create(log_dir, recursive = TRUE)
-logfile_offspring <- file.path(log_dir, paste0("logging_offspring_", date_string, ".csv"))
-logfile_gener     <- file.path(log_dir, paste0("logging_generation_", date_string, ".csv"))
+logfile_offspring   <- file.path(log_dir, paste0("logging_offspring_", date_string, ".csv"))
+logfile_gener       <- file.path(log_dir, paste0("logging_generation_", date_string, ".csv"))
 results_output_file <- file.path(log_dir, paste0("calibration_results_", date_string, ".rds"))
+metrics_output_file <- file.path(log_dir, paste0("calibration_metrics_", date_string, ".rds"))
+
 
 # -----------------
 # PARAMETER NAMES & DEFAULTS
@@ -179,8 +263,8 @@ compute_rmse <- function(par) {
         import_soil_temperature(datetime)
 
         # Run model
-        yr <- as.character(lubridate::year(dt))
-        voxel_TLS = structures_scaled[[yr]]
+        key_struct <- paste0(lubridate::year(dt), "-", sprintf("%02d", lubridate::month(dt)))
+        voxel_TLS  <- structures_scaled[[key_struct]]
         res <- run_foredgeclim(voxel_TLS$grid, datetime)
         micro_grid <- res$micro_grid
         air_temp   <- res$air_temperature
@@ -249,6 +333,162 @@ compute_rmse <- function(par) {
   if (n_total == 0) return(1e6)
   sqrt(sse_total / n_total)  # RMSE
 }
+
+# -----------------
+# EXTRA METRICS: RMSE, R2, NSE, ME
+# -----------------
+compute_metrics <- function(par) {
+
+  parts <- lapply(
+    all_datetimes,
+    FUN = function(dt) {
+
+      # Assign parameters to globals used in ForEdgeClim
+      if (param_set == "all") {
+        betad <<- par[1];  beta0 <<- par[2];  omega <<- par[3];  Kd_v <<- par[4];  Kb_v <<- par[5];  omega_g_v <<- par[6]
+        Kd_h <<- par[7];   Kb_h <<- par[8];   omega_g_h <<- par[9]; e_forest <<- par[10]
+        beta_lw <<- par[11]; omega_lw <<- par[12]; Kd_lw_v <<- par[13]; omega_g_lw_v <<- par[14]; Kd_lw_h <<- par[15]; omega_g_lw_h <<- par[16]
+        h <<- par[17]; g_macro <<- par[18]; infl_macro <<- par[19]; infl_soil <<- par[20]; infl_forest <<- par[21]; g_forest <<- par[22]
+        p_ground <<- par[23]; g_soil <<- par[24]; k_soil <<- par[25]
+      } else if (param_set == "focused") {
+        h <<- par[1]; g_macro <<- par[2]; infl_macro <<- par[3]; infl_soil <<- par[4]; infl_forest <<- par[5]; g_forest <<- par[6]
+        p_ground <<- par[7]; g_soil <<- par[8]; k_soil <<- par[9]
+      } else { # top_3
+        g_macro <<- par[1]; infl_macro <<- par[2]; infl_soil <<- par[3]
+      }
+
+      datetime <- as.POSIXct(dt, tz = "UTC")
+
+      out <- tryCatch({
+
+        # Import observations
+        import_RMI_observations(datetime)
+        if (is_empty(F_sky_lw)) {
+          assign("F_sky_lw", sigma_SB * 0.75 * macro_temp^4, envir = .GlobalEnv)
+        }
+        import_pyr_observations(datetime)
+        import_soil_temperature(datetime)
+
+        # Run model
+        key_struct <- paste0(lubridate::year(dt), "-", sprintf("%02d", lubridate::month(dt)))
+        voxel_TLS  <- structures_scaled[[key_struct]]
+        res <- run_foredgeclim(voxel_TLS$grid, datetime)
+        micro_grid <- res$micro_grid
+        air_temp   <- res$air_temperature
+        if (any(!is.finite(air_temp))) stop("NaN/Inf in air_temp")
+
+        # Observations
+        key <- format(datetime, "%Y%m%d_%H%M")
+
+        TOMST_hor <- read.csv(paste0("Data/TOMST_filtered_distance_temp_", key, ".csv"))
+        TOMST_hor <- TOMST_hor %>%
+          dplyr::mutate(D_edge = 135 - D_edge,
+                        D_edge = ifelse(D_edge == 0, 1, D_edge)) %>%
+          dplyr::rename(position_X_or_Z = D_edge) %>%
+          dplyr::arrange(position_X_or_Z)
+
+        TOMST_ver <- read.csv(paste0("Data/TOMST_filtered_height_temp_", key, ".csv")) %>%
+          dplyr::rename(position_X_or_Z = height) %>%
+          dplyr::filter(position_X_or_Z != 0) %>%
+          dplyr::arrange(position_X_or_Z)
+
+        # Double the vertical points since there are twice as many horizontal points
+        TOMST_ver <- rbind(TOMST_ver, TOMST_ver)
+        TOMST_all <- dplyr::bind_rows(TOMST_hor, TOMST_ver)
+
+        # Model
+        temp_air_grid <- micro_grid
+        temp_air_grid$temperature <- air_temp - 273.15
+
+        reqhgt <- temp_air_grid %>%
+          dplyr::filter(z == req_height, y == 15, x <= length_transect) %>%
+          dplyr::filter(x %in% TOMST_hor$position_X_or_Z) %>%
+          dplyr::arrange(x)
+
+        vertical <- temp_air_grid %>%
+          dplyr::filter(x == 135 - 75, y == 15) %>%
+          dplyr::filter(z %in% TOMST_ver$position_X_or_Z) %>%
+          dplyr::arrange(z)
+
+        # Double the vertical points since there are twice as many horizontal points
+        vertical <- rbind(vertical, vertical)
+
+        model_all <- dplyr::bind_rows(reqhgt, vertical)
+
+        if (nrow(model_all) != nrow(TOMST_all)) stop("Model/observation lengths mismatch")
+
+        diffs <- model_all$temperature - TOMST_all$Tair
+        valid <- is.finite(diffs)
+
+        if (!any(valid)) stop("No valid differences")
+
+        sim <- model_all$temperature[valid]
+        obs <- TOMST_all$Tair[valid]
+
+        list(
+          sse         = sum((sim - obs)^2),
+          n           = length(sim),
+          sum_sim     = sum(sim),
+          sum_obs     = sum(obs),
+          sum_sim2    = sum(sim^2),
+          sum_obs2    = sum(obs^2),
+          sum_sim_obs = sum(sim * obs)
+        )
+      }, error = function(e) {
+        warning(paste("Crash during metrics computation:", format(datetime), "-", e$message))
+        list(
+          sse = NA_real_, n = 0L,
+          sum_sim = 0, sum_obs = 0,
+          sum_sim2 = 0, sum_obs2 = 0,
+          sum_sim_obs = 0
+        )
+      })
+
+      out
+    }
+  )
+
+  # aggregation over all time steps
+  sse_total        <- sum(vapply(parts, `[[`, numeric(1), "sse"),         na.rm = TRUE)
+  n_total          <- sum(vapply(parts, `[[`, integer(1), "n"))
+  sum_sim_total    <- sum(vapply(parts, `[[`, numeric(1), "sum_sim"),     na.rm = TRUE)
+  sum_obs_total    <- sum(vapply(parts, `[[`, numeric(1), "sum_obs"),     na.rm = TRUE)
+  sum_sim2_total   <- sum(vapply(parts, `[[`, numeric(1), "sum_sim2"),    na.rm = TRUE)
+  sum_obs2_total   <- sum(vapply(parts, `[[`, numeric(1), "sum_obs2"),    na.rm = TRUE)
+  sum_sim_obs_total<- sum(vapply(parts, `[[`, numeric(1), "sum_sim_obs"), na.rm = TRUE)
+
+  if (n_total == 0) {
+    return(list(RMSE = NA_real_, R2 = NA_real_, NSE = NA_real_, ME = NA_real_))
+  }
+
+  # RMSE
+  rmse <- sqrt(sse_total / n_total)
+
+  # averages
+  mean_sim <- sum_sim_total / n_total
+  mean_obs <- sum_obs_total / n_total
+
+  # NSE = 1 - SSE / sum( (obs - mean_obs)^2 )
+  denom_nse <- sum_obs2_total - n_total * mean_obs^2
+  nse <- if (denom_nse > 0) 1 - sse_total / denom_nse else NA_real_
+
+  # R^2 as (correlation)^2
+  cov_num     <- sum_sim_obs_total - n_total * mean_sim * mean_obs
+  var_sim_num <- sum_sim2_total    - n_total * mean_sim^2
+  var_obs_num <- sum_obs2_total    - n_total * mean_obs^2
+
+  r2 <- if (var_sim_num > 0 && var_obs_num > 0) {
+    (cov_num^2) / (var_sim_num * var_obs_num)
+  } else {
+    NA_real_
+  }
+
+  # ME = average error (sim - obs)
+  me <- (sum_sim_total - sum_obs_total) / n_total
+
+  list(RMSE = rmse, R2 = r2, NSE = nse, ME = me)
+}
+
 
 
 
@@ -418,6 +658,17 @@ cat("\nOptimised parameters (final):\n")
 print(res$best.param)
 cat("\nMinimal RMSE observed:\n")
 print(res$best.fitness)
+
+# -----------------
+# EXTRA METRICS FOR BEST PARAMETERS SET
+# -----------------
+best_metrics <- compute_metrics(res$best.param)
+
+cat("\nPerformance metrics for best parameter set:\n")
+print(best_metrics)
+
+saveRDS(best_metrics, file = metrics_output_file)
+
 
 end_analysis <- Sys.time()
 cat(sprintf('\nTotal running time = %.2f h\n', as.numeric(end_analysis - start_analysis, units = 'hours')))

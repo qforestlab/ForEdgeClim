@@ -211,7 +211,7 @@ run_foredgeclim <- function(structure_grid, datetime) {
 
     # Check convergence
     if (max(abs(energy_balance_surf)) < energy_balance_tolerance){
-      print(paste0('Convergence is reached after ', iter, ' iterations.'))
+      #print(paste0('Convergence is reached after ', iter, ' iterations.'))
       break
     }
 
