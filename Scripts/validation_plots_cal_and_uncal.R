@@ -177,6 +177,166 @@ ggsave(file.path(output_path, paste0("time_series_residual_", base_season, "_bot
        plot = time_residual, width = 16, height = 10, dpi = 500)
 
 # -----------------
+# RESIDUALS: grouped by hour-of-day (24h) per model
+# -----------------
+
+val_data_all_h <- val_data_all %>%
+  mutate(
+    hour = lubridate::hour(datetime),
+    hour_f = factor(hour, levels = 0:23, labels = sprintf("%02d", 0:23))
+  )
+
+hour_residual <- ggplot(val_data_all_h, aes(x = hour_f, y = resid)) +
+  geom_boxplot(
+    fill = NA,            # geen vulling
+    colour = "blue",      # box + whiskers
+    linewidth = 1,
+    outlier.colour = "blue",
+    outlier.alpha = 0.4
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "red", linewidth = 1) +
+  labs(
+    y = "Residual (°C)",
+    x = "Hour of day",
+    title = "(b) Residuals grouped by hour of day"
+  ) +
+  theme_bw() +
+  scale_x_discrete(
+    breaks = sprintf("%02d", c(0, 6, 12, 18))
+  ) +
+  theme(
+    plot.title  = element_text(size = 40),
+    axis.title  = element_text(size = 40),
+    axis.text.x = element_text(size = 40),
+    axis.text.y = element_text(size = 40),
+    strip.text  = element_text(size = 40)
+  ) +
+  facet_wrap(~ model, ncol = 2) +
+  geom_label(
+    data = lab_resid_df,
+    aes(x = -Inf, y = Inf, label = lab_resid),
+    inherit.aes = FALSE,
+    hjust = -0.1, vjust = 1.2,
+    label.size = 0.6,
+    label.r = unit(0.15, "lines"),
+    fill = "white",
+    colour = "black",
+    size = 10
+  )
+
+
+print(hour_residual)
+ggsave(
+  file.path(output_path, paste0("residual_by_hour_", base_season, "_both.png")),
+  plot = hour_residual, width = 16, height = 10, dpi = 500
+)
+
+
+# -----------------
+# RESIDUALS: grouped by TMS position (distance to edge), excluding selected positions (ie, vertical positions)
+# -----------------
+
+excluded_pos <- c(7, 14, 21, 28, 35)
+
+val_data_x <- val_data_all %>%
+  filter(!TMS_position %in% excluded_pos) %>%
+  mutate(
+    TMS_position = if_else(TMS_position == 1, 0L, TMS_position)
+  ) %>%
+  mutate(
+    TMS_position_f = factor(TMS_position, levels = sort(unique(TMS_position)))
+  )
+
+x_residual <- ggplot(val_data_x, aes(x = TMS_position_f, y = resid)) +
+  geom_boxplot(
+    fill = NA,            # geen vulling
+    colour = "blue",      # box + whiskers
+    linewidth = 1,
+    outlier.colour = "blue",
+    outlier.alpha = 0.4
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "red", linewidth = 1) +
+  labs(
+    y = "Residual (°C)",
+    x = "Distance from forest core (m)",
+    title = "(c) Residuals grouped by distance from forest core"
+  ) +
+  theme_bw() +
+  scale_x_discrete(
+    breaks = function(x) {
+      x_num <- suppressWarnings(as.numeric(x))
+      x[!is.na(x_num) & (x_num %% 30 == 0)]
+    }
+  ) +
+  theme(
+    plot.title  = element_text(size = 40),
+    axis.title  = element_text(size = 40),
+    axis.text.x = element_text(size = 40),
+    axis.text.y = element_text(size = 40),
+    strip.text  = element_text(size = 40)
+  ) +
+  facet_wrap(~ model, ncol = 2)
+
+print(x_residual)
+ggsave(
+  file.path(output_path,
+            paste0("residual_by_TMS_position_", base_season, "_both.png")),
+  plot = x_residual, width = 16, height = 10, dpi = 500
+)
+
+
+# -----------------
+# RESIDUALS: grouped by TMS position (height from floor), excluding selected positions (ie, horizontal positions)
+# -----------------
+
+excluded_pos <- c(1, 15, 30, 60, 90, 105, 120, 135)
+
+val_data_x_ver <- val_data_all %>%
+  filter(!TMS_position %in% excluded_pos) %>%
+  mutate(
+    TMS_position = if_else(TMS_position == 75, 0L, TMS_position)
+  ) %>%
+  mutate(
+    TMS_position_f = factor(
+      TMS_position,
+      levels = sort(unique(TMS_position))
+    )
+  )
+
+
+x_residual_ver <- ggplot(val_data_x_ver, aes(x = TMS_position_f, y = resid)) +
+  geom_boxplot(
+    fill = NA,            # geen vulling
+    colour = "blue",      # box + whiskers
+    linewidth = 1,
+    outlier.colour = "blue",
+    outlier.alpha = 0.4
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "red", linewidth = 1) +
+  labs(
+    y = "Residual (°C)",
+    x = "Height (m)",
+    title = "(d) Residuals grouped by height from forest floor"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title  = element_text(size = 40),
+    axis.title  = element_text(size = 40),
+    axis.text.x = element_text(size = 40),
+    axis.text.y = element_text(size = 40),
+    strip.text  = element_text(size = 40)
+  ) +
+  facet_wrap(~ model, ncol = 2)
+
+print(x_residual_ver)
+ggsave(
+  file.path(output_path,
+            paste0("residual_by_TMS_position_ver_", base_season, "_both.png")),
+  plot = x_residual_ver, width = 16, height = 10, dpi = 500
+)
+
+
+# -----------------
 # CONSOLE SUMMARIES (per model)
 # -----------------
 
@@ -198,139 +358,3 @@ stats_df %>%
   print(row.names = FALSE)
 
 
-# # -----------------
-# # MODEL vs OBS per position for specific time points (1, 5, 12h)
-# # -----------------
-#
-# # If there are only 24 unique datetimes, duplicate rows (as in your original code)
-# val_data_all_2 <- val_data_all %>%
-#   group_by(model) %>%
-#   group_modify(~ {
-#     x <- .x
-#     if (length(unique(x$datetime)) == 24) rbind(x, x) else x
-#   }) %>%
-#   ungroup()
-#
-# # Mean + 95% CI per TMS_position & moment & model
-# val_summary <- val_data_all_2 %>%
-#   mutate(datetime = as.POSIXct(datetime, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
-#          datetime = ymd_hms(datetime),
-#          hour = hour(datetime)) %>%
-#   filter(hour %in% c(1, 5, 12),
-#          !(TMS_position %in% c(7, 14, 21, 28, 35))) %>% # exclude vertical ones here
-#   mutate(
-#     moment = case_when(
-#       hour == 1  ~ "Night (01:00)",
-#       hour == 5  ~ "Morning (05:00)",
-#       hour == 12 ~ "Day (12:00)"
-#     ),
-#     moment = factor(moment, levels = c("Night (01:00)", "Morning (05:00)", "Day (12:00)"))
-#   ) %>%
-#   group_by(model, TMS_position, moment) %>%
-#   summarise(
-#     n        = dplyr::n(),
-#     mean_obs = mean(obs, na.rm = TRUE),
-#     sd_obs   = sd(obs, na.rm = TRUE),
-#     mean_mod = mean(mod, na.rm = TRUE),
-#     sd_mod   = sd(mod, na.rm = TRUE),
-#     .groups  = "drop_last"
-#   ) %>%
-#   mutate(
-#     se_obs   = sd_obs / sqrt(pmax(n, 1)),
-#     se_mod   = sd_mod / sqrt(pmax(n, 1)),
-#     tcrit    = qt(0.975, df = pmax(n - 1, 1)), # 95% t-CI
-#     ci_obs_low    = mean_obs - tcrit * se_obs,
-#     ci_obs_high   = mean_obs + tcrit * se_obs,
-#     ci_mod_low    = mean_mod - tcrit * se_mod,
-#     ci_mod_high   = mean_mod + tcrit * se_mod
-#   ) %>%
-#   ungroup()
-#
-# # Ranges per moment (inclusive CIs) across both models
-# ranges <- val_summary %>%
-#   group_by(moment) %>%
-#   summarise(
-#     rmin = min(ci_obs_low,  ci_mod_low,  na.rm = TRUE),
-#     rmax = max(ci_obs_high, ci_mod_high, na.rm = TRUE),
-#     .groups = "drop"
-#   ) %>%
-#   mutate(
-#     pad  = 0.2 * (rmax - rmin + 1e-9),
-#     xmin = rmin - pad,
-#     xmax = rmax + pad,
-#     ymin = rmin - pad,
-#     ymax = rmax + pad
-#   )
-#
-# # Helper to extract a single row of limits as a named list
-# get_limits <- function(rng_tbl, moment_label){
-#   rng_tbl %>% filter(moment == moment_label) %>% as.list()
-# }
-#
-# # Plot function with model colour + dodged error bars
-# make_plot <- function(df, limits_row) {
-#   ggplot(df, aes(x = mean_mod, y = mean_obs, label = TMS_position, colour = model)) +
-#     geom_errorbar(aes(ymin = ci_obs_low, ymax = ci_obs_high),
-#                   width = 0, position = position_dodge(width = 0.2)) +
-#     geom_errorbarh(aes(xmin = ci_mod_low, xmax = ci_mod_high),
-#                    height = 0, position = position_dodge(width = 0.2)) +
-#     geom_point(size = 2, alpha = 0.7, position = position_dodge(width = 0.2)) +
-#     geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "red") +
-#     geom_text(nudge_x = 0.05, nudge_y = 0.05, size = 3, show.legend = FALSE) +
-#     labs(x = "Observed Tair (°C)",
-#          y = "Modelled Tair (°C)",
-#          title = unique(df$moment)) +
-#     theme_bw() +
-#     coord_fixed(
-#       xlim = c(limits_row$xmin, limits_row$xmax),
-#       ylim = c(limits_row$ymin, limits_row$ymax),
-#       expand = FALSE
-#     )
-# }
-#
-# df_morning <- val_summary %>% filter(moment == "Morning (05:00)")
-# df_day     <- val_summary %>% filter(moment == "Day (12:00)")
-# df_night   <- val_summary %>% filter(moment == "Night (01:00)")
-#
-# lim_morning <- get_limits(ranges, "Morning (05:00)")
-# lim_day     <- get_limits(ranges, "Day (12:00)")
-# lim_night   <- get_limits(ranges, "Night (01:00)")
-#
-# p_morning <- make_plot(df_morning, lim_morning)
-# p_day     <- make_plot(df_day,     lim_day)
-# p_night   <- make_plot(df_night,   lim_night)
-#
-# m_o_position <- p_night + p_morning + p_day + plot_annotation(
-#   title = "Modelled vs observed temperature per TMS position (calibrated vs uncalibrated)",
-#   theme = theme(
-#     plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-#     plot.subtitle = element_text(hjust = 0.5, size = 12))
-# )
-# print(m_o_position)
-# ggsave(file.path(output_path, paste0("model_vs_obs_over_position_", base_season, "_both.png")),
-#        plot = m_o_position, width = 11, height = 6, dpi = 300)
-
-# # -----------------
-# # TIME SERIES: temperature fluctuations (obs + both model variants)
-# # -----------------
-#
-# # Keep one copy of the observations (avoid plotting them twice)
-# obs_df <- val_data_all %>%
-#   distinct(datetime, TMS_position, obs) %>%
-#   transmute(datetime, TMS_position, series = "obs", Tair = obs)
-#
-# mods_df <- val_data_all %>%
-#   transmute(datetime, TMS_position,
-#             series = paste0("model_", model),  # "model_calibrated", "model_uncalibrated"
-#             Tair = mod)
-#
-# val_data_long <- bind_rows(obs_df, mods_df)
-#
-# time_fluctuations <- ggplot(val_data_long, aes(x = datetime, y = Tair, colour = series)) +
-#   geom_point(alpha = 0.6) +
-#   labs(y = "Air temperature (°C)",
-#        title = "Time series of temperature fluctuations (obs vs calibrated & uncalibrated)") +
-#   theme_bw()
-# print(time_fluctuations)
-# ggsave(file.path(output_path, paste0("time_series_fluctuations_", base_season, "_both.png")),
-#        plot = time_fluctuations, width = 10, height = 6, dpi = 300)

@@ -4,7 +4,7 @@
 \alias{run_foredgeclim}
 \title{Execute the microclimate model ForEdgeClim}
 \usage{
-run_foredgeclim(structure_grid, datetime)
+run_foredgeclim(structure_grid, datetime, trace_idx = NULL)
 }
 \arguments{
 \item{structure_grid}{Dataframe with structural density values}

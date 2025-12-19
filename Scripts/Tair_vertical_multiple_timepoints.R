@@ -22,10 +22,17 @@ library(abind)
 model_times <- lubridate::ymd_h(c("2023-07-08 01", "2023-07-08 08", "2023-07-08 12"))
 
 res_list   <- list(
-  readRDS("Output/2023-07-08_01/model_results.rds"),
-  readRDS("Output/2023-07-08_08/model_results.rds"),
-  readRDS("Output/2023-07-08_12/model_results.rds")
+  readRDS("Output/2023-07-08_01/model_results_calibrated.rds"),
+  readRDS("Output/2023-07-08_08/model_results_calibrated.rds"),
+  readRDS("Output/2023-07-08_12/model_results_calibrated.rds")
 )
+
+res_list_cal <- list(
+  readRDS("Output/2023-07-08_01/model_results_calibrated_year.rds"),
+  readRDS("Output/2023-07-08_08/model_results_calibrated_year.rds"),
+  readRDS("Output/2023-07-08_12/model_results_calibrated_year.rds")
+)
+
 
 tomst_files <- c(
   "Data/model_TOMST_result_files/TOMST_filtered_height_temp_20230708_0100.csv",
@@ -39,22 +46,42 @@ tomst_times <- model_times
 # DATA  #
 #########
 
-# Model data in long-form (x == 75)
+# Model data (Seasonally calibrated fit) in long-form (x == 75)
 model_df <- bind_rows(
   lapply(seq_along(res_list), function(i) {
     df   <- res_list[[i]]$micro_grid
     Tair <- res_list[[i]]$air_temperature
     df %>%
       mutate(Tair = Tair) %>%
-      filter(z <= 35, y == 15, x == 75) %>%
+      filter(z <= 35, y == 18, x == 75) %>%
       transmute(
         z           = z,
         temperature = Tair - 273.15,
         model       = "Modelled",
+        variant     = "Seasonally calibrated fit",
         time        = model_times[i]
       )
   })
 )
+
+# Model data (Annually calibrated fit) in long-form (x == 75)
+model_df_cal <- bind_rows(
+  lapply(seq_along(res_list_cal), function(i) {
+    df   <- res_list_cal[[i]]$micro_grid
+    Tair <- res_list_cal[[i]]$air_temperature
+    df %>%
+      mutate(Tair = Tair) %>%
+      filter(z <= 35, y == 18, x == 75) %>%
+      transmute(
+        z           = z,
+        temperature = Tair - 273.15,
+        model       = "Modelled",
+        variant     = "Annually calibrated fit",
+        time        = model_times[i]
+      )
+  })
+)
+
 
 # TOMST data in long-form
 tomst_df <- bind_rows(
@@ -69,14 +96,16 @@ tomst_df <- bind_rows(
   })
 )
 
-anim_df <- bind_rows(model_df, tomst_df) %>%
+anim_df <- bind_rows(model_df, model_df_cal, tomst_df) %>%
   mutate(
+    variant  = ifelse(model == "Observed", "Observed", variant),
     time     = lubridate::floor_date(time, unit = "hour"),
     hour_lbl = format(time, "%Hh"),
     time_lbl = factor(hour_lbl,
                       levels = c("01h", "08h", "12h"),
                       labels = c("01h (~night)", "08h (~morning)", "12h (~noon)"))
   )
+
 
 temp_min <- floor(min(anim_df$temperature, na.rm = TRUE))
 temp_max <- ceiling(max(anim_df$temperature, na.rm = TRUE))
@@ -117,11 +146,15 @@ p_vert <- ggplot() +
     ymax = 35
   ) +
 
-  # Model as path
+  # Model as path (uncal + cal)
   geom_path(
     data = dplyr::filter(anim_df, model == "Modelled"),
-    aes(x = temperature, y = z, colour = time_lbl,
-        linetype = model, shape = model, group = interaction(model, time_lbl)),
+    aes(
+      x = temperature, y = z,
+      colour = time_lbl,
+      linetype = variant,
+      group = interaction(model, variant, time_lbl)
+    ),
     linewidth = 1
   ) +
 
@@ -157,10 +190,15 @@ p_vert <- ggplot() +
   # TOMST-points
   geom_point(
     data = dplyr::filter(anim_df, model == "Observed"),
-    aes(x = temperature, y = z, colour = time_lbl,
-        linetype = model, shape = model, group = interaction(model, time_lbl)),
+    aes(
+      x = temperature, y = z,
+      colour = time_lbl,
+      shape = model,
+      group = interaction(model, time_lbl)
+    ),
     size = 2.5
   ) +
+
   scale_colour_manual(
     name = "Time",
     values = c("01h (~night)" = "blue",
@@ -168,19 +206,20 @@ p_vert <- ggplot() +
                "12h (~noon)"    = "red")
   ) +
   scale_linetype_manual(
-    name = "Source",
-    values = c("Modelled" = "solid",
-               "Observed"  = "blank")
+    name = "Model output",
+    values = c("Seasonally calibrated fit" = "solid",
+               "Annually calibrated fit"   = "dashed")
   ) +
   scale_shape_manual(
-    name = "Source",
-    values = c("Modelled" = NA,
-               "Observed"  = 16)
+    name = "Observations",
+    values = c("Observed" = 16)
   ) +
   guides(
     colour   = guide_legend(order = 1, title = "Time", direction = "horizontal"),
-    linetype = guide_legend(order = 2, title = "Source", direction = "horizontal"),
-    shape    = guide_legend(order = 2, title = "Source", direction = "horizontal")
+    linetype = guide_legend(order = 2, title = "Model", direction = "horizontal",
+                            keywidth = unit(3.5, "cm"),
+                            override.aes = list(linewidth = 2)),
+    shape    = guide_legend(order = 3, title = "Data", direction = "horizontal")
   ) +
   coord_cartesian(ylim = c(0, 35), xlim = c(temp_min, temp_max)) +
   labs(x = "Temperature (°C)", y = "Height (m)", title = "(b) Vertical air temperature") +
@@ -196,6 +235,7 @@ p_vert <- ggplot() +
     panel.background  = element_rect(fill = NA, colour = NA),
     legend.background = element_rect(fill = alpha("white", 0.7), colour = NA)
   )
+
 
 p_vert <- p_vert +
   #coord_cartesian(ylim = c(0, 38), xlim = c(temp_min, temp_max), clip = "off") +

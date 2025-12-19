@@ -2,11 +2,9 @@
 .Rhistory
 Data_to_ignore/
 Parameter_values_from_literature/
-Issues ForEdgeClim.txt
 fast_load.R
 Data/*
 !Data/model_result_files/
-!Data/Macro_temp_plant_eco.txt
 !Data/pyranometer_tower.dat
 !Data/RMI_Melle.csv
 !Data/RMI_radiation.csv
@@ -18,11 +16,12 @@ Data/*
 !Data/TLS_scaled_DTM_and_grid_October2024.rds
 !Data/TOMST_hourly.xlsx
 Output/*
-!Output/2023-07-08_12/
+!Output/2023-07-08_14/
 !Output/horizontal_transect.png
 !Output/horizontal_transect_2.png
 !Output/vertical_transect.png
 Scripts/older_scripts/
 Scripts/combine_figures.R
+Scripts/voxelize_transect_image.R
 
 

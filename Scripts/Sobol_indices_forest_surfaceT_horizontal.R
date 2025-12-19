@@ -104,17 +104,29 @@ SW_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "
 # Longwave parameter sequence
 LW_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 
-focus_colors = c(
-  "blue",
-  "orange",
-  "red",
-  "blue3",
-  "orange3",
-  "red3",
-  "blue4",
-  "orange4",
-  "red4"
-)
+
+# focus_colors = c(
+#   "blue",
+#   "blue4",
+#   "orange",
+#   "red",
+#   "blue3",
+#   "orange3",
+#   "red3",
+#   "red4",
+#   "orange4"
+# )
+focus_colors <- c(
+  "#3B4CC0",  # deep blue
+  "#5E7FDB",  # blue
+  "#F7C58A",  # light orange
+  "#D62828",  # red
+  "#87AFDE",  # light blue
+  "#F4A259",  # orange
+  "#A4161A",  # dark red
+  "#6A040F",   # very dark red
+  "#E98B1E"   # deep orange
+  )
 
 
 # Color palette
@@ -125,19 +137,23 @@ all_colors <- c(
 )
 
 # legend labels
-labels_latex <- c(
-  "infl_macro"    = TeX("$i_m$"),
-  "infl_soil"     = TeX("$i_s$"),
-  "g_macro"       = TeX("$g_m$"),
-  "k_soil"        = TeX("$k_s$"),
-  "infl_forest"   = TeX("$i_f$"),
-  "g_soil"        = TeX("$g_s$"),
-  "h"             = TeX("$h$"),
-  "p_ground"      = TeX("$p$"),
-  "g_forest"      = TeX("$g_f$"),
-  "SW parameters" = "SW parameters",
-  "LW parameters" = "LW parameters"
+labels_expr <- c(
+  infl_macro  = expression(italic(i)[m]),
+  infl_soil   = expression(italic(i)[s]),
+  g_macro     = expression(italic(g)[m]),
+  k_soil      = expression(italic(k)[s]),
+  infl_forest = expression(italic(i)[f]),
+  g_soil      = expression(italic(g)[s]),
+  h           = expression(italic(h)),
+  p_ground    = expression(italic(p)),
+  g_forest    = expression(italic(g)[f]),
+  `SW parameters` = "SW parameters",
+  `LW parameters` = "LW parameters"
 )
+
+scale_fill_manual(values = all_colors, labels = labels_expr)
+
+
 
 # Load, combine and normalize
 sobol_df <- files_info %>%
@@ -245,10 +261,10 @@ mean_combined_focusedplus_n <- mean_combined_n %>%
 p_condition_focused_n <- ggplot(mean_combined_focusedplus_n, aes(x = mean_index, y = condition, fill = grouped_param)) +
   geom_col(width = 0.5) +
   facet_wrap(~ group, scales = "free_y", ncol = 1) +
-  scale_fill_manual(values = all_colors, labels = labels_latex) +
+  scale_fill_manual(values = all_colors, labels = labels_expr) +
   labs(
     title = "(b) Influence on forest surface temperature",
-    x = "Average normalized total-order Sobol-index",
+    x = "Average normalised total-order Sobol-index",
     y = "Condition",
     fill = "Parameter"#,
     #caption = "≈T = average temperature | σT = standard deviation on temperature | ∇T = temperature gradient"
@@ -344,9 +360,9 @@ avg_param_by_season  <- sobol_df %>% filter(!is.na(season)) %>%
   summarise(mean_index = mean(norm_value), sd_index = sd(norm_value), .groups = "drop")
 
 # get ranges on the contributions for top 4 parameters across conditions
-target_params <- c("infl_macro", "infl_soil", "g_forest", "g_macro")
+#target_params <- c("infl_macro", "infl_soil", "g_forest", "g_macro")
 # top 1 parameter
-#target_params <- c("infl_macro", "infl_soil")
+target_params <- c("g_forest")
 # # SW parameters:
 #target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
 # # LW parameters:

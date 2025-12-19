@@ -18,7 +18,7 @@
 #' @return Dataframe with simulated microclimate temperatures and fluxes
 #' @importFrom dplyr group_by ungroup mutate left_join
 #' @export
-run_foredgeclim <- function(structure_grid, datetime) {
+run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
 
 
   #print('🚩 𝙁𝙤𝙧𝙀𝙙𝙜𝙚𝘾𝙡𝙞𝙢')
@@ -127,6 +127,11 @@ run_foredgeclim <- function(structure_grid, datetime) {
   W_min = 0.01  # Weighting step, min value
   error_prev = Inf
 
+  # Optional tracing of Newton convergence for selected voxels
+  if (!is.null(trace_idx)) {
+    trace_list <- vector("list", max_iter)  # one entry per iteration
+  }
+
   for (iter in 1:max_iter) {
 
     #print(paste0('-> Iteration ', iter))
@@ -198,6 +203,23 @@ run_foredgeclim <- function(structure_grid, datetime) {
     energy_balance_surf <- net_radiation - sensible_flux - latent_flux
     #print(paste0('   Max E_bal error = ', round(max(abs(energy_balance_surf)), 2)))
     error_current = max(abs(energy_balance_surf))
+
+    # ---- Optional trace logging for selected voxels ----
+    if (!is.null(trace_idx)) {
+      valid_idx <- trace_idx[trace_idx >= 1 & trace_idx <= nrow(micro_grid)]
+
+      trace_list[[iter]] <- data.frame(
+        iter = iter,
+        voxel_id = valid_idx,
+        x = micro_grid$x[valid_idx],
+        y = micro_grid$y[valid_idx],
+        z = micro_grid$z[valid_idx],
+        T_surface = micro_grid$temperature[valid_idx],
+        T_air     = T_air_vec[valid_idx],
+        E_residual = energy_balance_surf[valid_idx]
+      )
+    }
+
     # Check oscillations, if so, reduce W
     if (iter > 1 && error_current > error_prev) {
       W = max(W * 0.8, W_min)  # Reduce W by 20%, but never smaller than W_min
@@ -236,7 +258,14 @@ run_foredgeclim <- function(structure_grid, datetime) {
     # Air temperature update based on a linearization as is done in microclimc (Maclean & Klinges, 2021).
     T_air_vec <- ( (w_macro_x + w_macro_z)*g_macro * macro_temp + w_soil*g_soil * micro_grid$T_ground + ifelse(den == 0, w_forest*g_forest * micro_grid$mean_temp, w_forest*g_forest *micro_grid$temperature) )/ ( (w_macro_x + w_macro_z)*g_macro + w_soil*g_soil + w_forest*g_forest)
 
-    }
+  }
+
+  if (!is.null(trace_idx)) {
+    trace_df <- dplyr::bind_rows(trace_list)
+  } else {
+    trace_df <- NULL
+  }
+
 
   res <- list(
     sw_rad_2D = final_results_2D, # SW RTM output
@@ -246,7 +275,8 @@ run_foredgeclim <- function(structure_grid, datetime) {
     net_radiation = net_radiation,
     sensible_flux = sensible_flux,
     latent_flux = latent_flux,
-    ground_flux = G
+    ground_flux = G,
+    newton_trace = trace_df
   )
 
   # Results

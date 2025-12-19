@@ -94,7 +94,7 @@ param_order <- c(
   "e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h",
   "h", "g_macro", "infl_macro", "infl_soil", "infl_forest", "g_forest", "p_ground", "g_soil", "k_soil"
 )
-# Focused parameter sequence in order from most influenteal to least influential (to be plot in this order)
+# Focused parameter sequence in order from most influential to least influential (to be plot in this order)
 focus_params <- c("infl_macro", "infl_soil", "g_macro",
                   "k_soil", "infl_forest", "g_soil",
                   "h", "p_ground", "g_forest")
@@ -102,17 +102,28 @@ focus_params <- c("infl_macro", "infl_soil", "g_macro",
 SW_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
 # Longwave parameter sequence
 LW_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
-
-focus_colors = c(
-  "blue",
-  "orange",
-  "red",
-  "blue3",
-  "orange3",
-  "red3",
-  "blue4",
-  "orange4",
-  "red4"
+#
+# focus_colors = c(
+#   "blue",
+#   "blue4",
+#   "orange",
+#   "red",
+#   "blue3",
+#   "orange3",
+#   "red3",
+#   "red4",
+#   "orange4"
+# )
+focus_colors <- c(
+  "#3B4CC0",  # deep blue
+  "#5E7FDB",  # blue
+  "#F7C58A",  # light orange
+  "#D62828",  # red
+  "#87AFDE",  # light blue
+  "#F4A259",  # orange
+  "#A4161A",  # dark red
+  "#6A040F",  # very dark red
+  "#E98B1E"   # deep orange
 )
 
 
@@ -248,7 +259,7 @@ p_condition_focused_n <- ggplot(mean_combined_focusedplus_n, aes(x = mean_index,
   scale_fill_manual(values = all_colors, labels = labels_latex) +
   labs(
     title = "(a) Influence on air temperature",
-    x = "Average normalized total-order Sobol-index",
+    x = "Average normalised total-order Sobol-index",
     y = "Condition",
     fill = "Parameter"#,
     #caption = "≈T = average temperature | σT = standard deviation on temperature | ∇T = temperature gradient"
@@ -343,13 +354,13 @@ avg_param_by_season  <- sobol_df %>% filter(!is.na(season)) %>%
 
 # get ranges on the contributions for top 3 parameters across conditions
 #target_params <- c("infl_macro", "infl_soil", "g_macro")
-# # SW parameters:
-#target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
-# # LW parameters:
+# SW parameters:
+target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
+# LW parameters:
 #target_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 # rad params
-target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h",
-                   "e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
+# target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h",
+#                    "e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 
 range_metric <- avg_param_by_metric %>%
   filter(parameter %in% target_params) %>%

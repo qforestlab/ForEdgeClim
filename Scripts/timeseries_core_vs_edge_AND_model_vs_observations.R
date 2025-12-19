@@ -79,7 +79,7 @@ model_core_df <- bind_rows(
     Tair <- res_list[[i]]$air_temperature
     df %>%
       mutate(Tair = Tair) %>%
-      filter(z == req_height, y == 15, x <= min(x)) %>%
+      filter(z == req_height, y == 18, x <= min(x)) %>%
       transmute(
         x           = x,
         temperature = Tair - 273.15,
@@ -98,7 +98,7 @@ model_edge_df <- bind_rows(
     Tair <- res_list[[i]]$air_temperature
     df %>%
       mutate(Tair = Tair) %>%
-      filter(z == req_height, y == 15, x == length_transect) %>%
+      filter(z == req_height, y == 18, x == length_transect) %>%
       transmute(
         x           = x,
         temperature = Tair - 273.15,
@@ -117,7 +117,7 @@ macro_df <- bind_rows(
     Tair <- res_list[[i]]$air_temperature
     df %>%
       mutate(Tair = Tair) %>%
-      filter(z == max(z), y == 15, x == max(x)) %>%
+      filter(z == max(z), y == 18, x == max(x)) %>%
       transmute(
         x           = x,
         temperature = Tair - 273.15,
@@ -241,11 +241,14 @@ timeseries <- ggplot(combined_df, aes(x = hour, y = temperature)) +
     expand = c(0.01, 0.01)
   ) +
   guides(
-    color = guide_legend(order = 1, direction = "horizontal", title = "Position:"),
+    color = guide_legend(order = 1, direction = "horizontal", title = "Position:", override.aes = list(
+      size = 6,
+      linewidth = 3
+    )),
     linetype = guide_legend(title = "|  Source: ", order = 2, direction = "horizontal",
       override.aes = list(linewidth = 1,color = "black")
     ),
-    shape = guide_legend(order = 3, direction = "horizontal", title = NULL)
+    shape = guide_legend(order = 3, direction = "horizontal", title = NULL, override.aes = list(size = 4))
   ) +
   theme_bw() +
   theme(

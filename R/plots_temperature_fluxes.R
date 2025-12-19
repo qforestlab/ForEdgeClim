@@ -31,6 +31,11 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     group_by(x, z) |>
     summarise(mean_temperature = mean(temperature, na.rm = TRUE), .groups = 'keep')
 
+  # Calculate ground surface temperature for forest surface
+  surface_temperature_ground <- temp_surf_grid |>
+    filter(den != 0) |>
+    filter(z == 1)
+
   # Caption to be plotted below the plots
   caption = substitute(
     atop(
@@ -93,8 +98,6 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
       )
 
 
-  print(temp_surf_plot)
-
   ggsave(paste0(output_path, '/temp_surface.png'), plot = temp_surf_plot, width = 9, height = 3, dpi = 500)
 
 
@@ -127,14 +130,17 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
       legend.text  = element_text(size = 16)
     )
 
-  print(temp_soil_plot)
-
   ggsave(paste0(output_path, '/temp_soil.png'), plot = temp_soil_plot, width = 9, height = 3, dpi = 500)
 
   # Calculate the average of the air temperature over all y-slices for each combination of x and z
   average_air_temperature <- temp_air_grid |>
     group_by(x, z) |>
     summarise(mean_temperature = mean(temperature, na.rm = TRUE), .groups = 'keep')
+
+  # Calculate the air temperature at ground level
+  ground_air_temperature <- temp_air_grid |>
+    filter(z ==1)
+
 
   # 2D tile plot:
   temp_air_plot = ggplot(average_air_temperature, aes(x = x, y = z, fill = mean_temperature)) +
@@ -163,10 +169,140 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
       legend.title = element_text(size = 18),
       legend.text  = element_text(size = 16)
     )
-  print(temp_air_plot)
 
   ggsave(paste0(output_path, '/temp_air.png'), plot = temp_air_plot, width = 9, height = 3, dpi = 500)
 
+
+  # 3D plots #
+  ############
+
+  # 3D plot averaged air temperature
+
+  temp_air_plot_3D = ggplot(average_air_temperature, aes(x = x, y = z, fill = mean_temperature)) +
+    geom_tile()+
+    annotation_custom(
+      grob = bg_grob,
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
+    ) +
+    scale_fill_gradientn(
+      colors = colors,
+      values = rescale(c(0.25, 0.5, 0.75, 1)),
+      limits = c(26, 34),
+      oob = scales::squish,
+      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    labs(title = NULL,
+         x = NULL, y = NULL, fill = NULL)+
+    scale_y_continuous(
+      position = "right"
+    ) +
+    coord_fixed(ratio = 1, clip = "off") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(size = 20),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16),
+      legend.position = "right",
+      plot.background = element_rect(fill = "transparent", colour = NA),
+      panel.background = element_rect(fill = "transparent", colour = NA),
+      legend.background = element_rect(fill = "transparent", colour = NA),
+      legend.box.background = element_rect(fill = "transparent", colour = NA)
+    )
+
+
+  ggsave(paste0(output_path, '/3D_temp_air.pdf'), plot = temp_air_plot_3D, width = 9, height = 3, dpi = 500)
+
+  # 3D plot air temperature at ground surface
+
+  temp_air_plot_3D_ground = ggplot(ground_air_temperature, aes(x = x, y = y, fill = temperature)) +
+    geom_tile()+
+    scale_fill_gradientn(
+      colors = colors,
+      values = rescale(c(0.25, 0.5, 0.75, 1)),
+      limits = c(26, 34),
+      oob = scales::squish,
+      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    labs(title = NULL,
+         x = NULL, y = NULL, fill = NULL)+
+    coord_fixed(ratio = 1, clip = "off") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(size = 20),
+      axis.text.y = element_text(size = 20),
+      legend.position = 'none',
+      plot.background = element_rect(fill = "transparent", colour = NA),
+      panel.background = element_rect(fill = "transparent", colour = NA),
+      legend.background = element_rect(fill = "transparent", colour = NA),
+      legend.box.background = element_rect(fill = "transparent", colour = NA)
+    )
+
+
+  ggsave(paste0(output_path, '/3D_temp_air_ground.pdf'), plot = temp_air_plot_3D_ground, width = 9, height = 3, dpi = 500)
+
+  # 3D plot averaged forest surface
+
+  temp_surf_plot_3D = ggplot(average_surface_temperature, aes(x = x, y = z, fill = mean_temperature)) +
+    geom_tile()+
+    annotation_custom(
+      grob = bg_grob,
+      xmin = 0, xmax = 140,
+      ymin = 0, ymax = 40
+    ) +
+    scale_fill_gradientn(
+      colors = colors,
+      values = rescale(c(0.25, 0.5, 0.75, 1)),
+      limits = c(25, 47),
+      oob = scales::squish,
+      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    labs(title = NULL,
+         x = NULL, y = NULL, fill = NULL)+
+    scale_y_continuous(
+      position = "right"
+    ) +
+    coord_fixed(ratio = 1, clip = "off") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(size = 20),
+      legend.title = element_text(size = 18),
+      legend.text  = element_text(size = 16),
+      legend.position = "right",
+      plot.background = element_rect(fill = "transparent", colour = NA),
+      panel.background = element_rect(fill = "transparent", colour = NA),
+      legend.background = element_rect(fill = "transparent", colour = NA),
+      legend.box.background = element_rect(fill = "transparent", colour = NA)
+    )
+
+
+  ggsave(paste0(output_path, '/3D_temp_surface.pdf'), plot = temp_surf_plot_3D, width = 9, height = 3, dpi = 500)
+
+  # 3D plot forest surface at ground surface
+
+  temp_surf_plot_3D_ground = ggplot(surface_temperature_ground, aes(x = x, y = y, fill = temperature)) +
+    geom_tile()+
+    scale_fill_gradientn(
+      colors = colors,
+      values = rescale(c(0.25, 0.5, 0.75, 1)),
+      limits = c(25, 47),
+      oob = scales::squish,
+      guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
+    labs(title = NULL,
+         x = NULL, y = NULL, fill = NULL)+
+    coord_fixed(ratio = 1, clip = "off") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(size = 20),
+      axis.text.y = element_text(size = 20),
+      legend.position = 'none',
+      plot.background = element_rect(fill = "transparent", colour = NA),
+      panel.background = element_rect(fill = "transparent", colour = NA),
+      legend.background = element_rect(fill = "transparent", colour = NA),
+      legend.box.background = element_rect(fill = "transparent", colour = NA)
+    )
+
+
+  ggsave(paste0(output_path, '/3D_temp_surface_ground.pdf'), plot = temp_surf_plot_3D_ground, width = 9, height = 3, dpi = 500)
 
 }
 
@@ -237,8 +373,6 @@ plots_flux <- function(micro_grid, net_radiation, sensible_flux, latent_flux, G,
       plot.caption = element_text(hjust = 0, color = "black")
     )
 
-  print(rad_plot)
-
   ggsave(paste0(output_path, '/flux_net_radiation.png'), plot = rad_plot, width = 9, height = 3, dpi = 300)
 
   # Calculate the average of the sensible heat flux over all y-slices for each combination of x and z
@@ -263,8 +397,6 @@ plots_flux <- function(micro_grid, net_radiation, sensible_flux, latent_flux, G,
     theme(
       plot.caption = element_text(hjust = 0, color = "black")
     )
-
-  print(H_plot)
 
   ggsave(paste0(output_path, '/flux_sensible.png'), plot = H_plot, width = 9, height = 3, dpi = 300)
 
@@ -291,8 +423,6 @@ plots_flux <- function(micro_grid, net_radiation, sensible_flux, latent_flux, G,
       plot.caption = element_text(hjust = 0, color = "black")
     )
 
-  print(LE_plot)
-
   ggsave(paste0(output_path, '/flux_latent.png'), plot = LE_plot, width = 9, height = 3, dpi = 300)
 
   # Calculate the average of the ground heat flux over all y-slices for each combination of x and z
@@ -318,8 +448,6 @@ plots_flux <- function(micro_grid, net_radiation, sensible_flux, latent_flux, G,
       plot.caption = element_text(hjust = 0, color = "black"),
       axis.text.y = element_blank()
     )
-
-  print(ground_plot)
 
   ggsave(paste0(output_path, '/flux_ground.png'), plot = ground_plot, width = 9, height = 3, dpi = 300)
 

@@ -79,7 +79,7 @@ plots_lw <- function(lw_rad_2D, output_path){
     scale_fill_viridis_c(option = "inferno",
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(b) Longwave upward radiation"),
-         x = "\nDistance from forest core", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) )+ #,
+         x = "\nDistance from forest core (m)", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) )+ #,
          #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +
