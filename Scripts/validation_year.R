@@ -1,5 +1,5 @@
 ############################################################################################
-# This script validates ForEdgeClim's model output with observational TOMST TMS-4 sensors.
+# This script validates ForEdgeClim's model output with observational TOMST TMS-4 sensors for the whole year.
 #
 # Author: Emma Van de Walle - Q-ForestLab
 ############################################################################################

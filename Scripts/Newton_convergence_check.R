@@ -108,7 +108,7 @@ for (current_datetime in datetime_series) {
       aes(
         x      = iter,
         y      = T_surface_C,
-        colour = dist_macro,      # <--- distance as colour
+        colour = dist_macro,
         group  = voxel_label
       )
     ) +
@@ -143,7 +143,7 @@ for (current_datetime in datetime_series) {
       aes(
         x      = iter,
         y      = abs_E,
-        colour = dist_macro,      # <--- idem
+        colour = dist_macro,
         group  = voxel_label
       )
     ) +

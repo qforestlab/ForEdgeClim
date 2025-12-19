@@ -104,18 +104,6 @@ SW_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "
 # Longwave parameter sequence
 LW_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 
-
-# focus_colors = c(
-#   "blue",
-#   "blue4",
-#   "orange",
-#   "red",
-#   "blue3",
-#   "orange3",
-#   "red3",
-#   "red4",
-#   "orange4"
-# )
 focus_colors <- c(
   "#3B4CC0",  # deep blue
   "#5E7FDB",  # blue
@@ -270,19 +258,19 @@ p_condition_focused_n <- ggplot(mean_combined_focusedplus_n, aes(x = mean_index,
     #caption = "≈T = average temperature | σT = standard deviation on temperature | ∇T = temperature gradient"
   ) +
   theme_bw(base_size = 14) +
-  guides(fill = guide_legend(ncol = 1, reverse = TRUE)) +   # één enkele rij
+  guides(fill = guide_legend(ncol = 1, reverse = TRUE)) +
   theme(
     plot.title = element_text(size = 40),
     axis.title.x    = element_text(size = 40),
     axis.title.y = element_blank(),
     axis.text.x     = element_text(size = 40),
     axis.text.y     = element_blank(),
-    legend.position = "right",        # legende bovenaan
-    legend.direction = "vertical",# horizontaal
+    legend.position = "right",
+    legend.direction = "vertical",
     legend.title    = element_text(size = 40),
     legend.text     = element_text(size = 40),
-    legend.key.size = unit(1.0, "cm"),  # grootte van de kleurbalkjes
-    legend.spacing.x = unit(0.5, "cm"), # wat extra ruimte tussen legendelabels
+    legend.key.size = unit(1.0, "cm"),
+    legend.spacing.x = unit(0.5, "cm"),
     strip.text = element_text(size = 40),
     plot.caption = element_text(hjust = 0)
   )

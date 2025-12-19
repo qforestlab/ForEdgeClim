@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# In this script, a time series of model and observations is plotted for 6 time
+# In this script, a time series of model and observations is plotted for 24 time
 # points on July 8 2023. For both model and observations, we compare edge vs
 # core positions within the forest transect.
 #
@@ -13,7 +13,7 @@ library(ggplot2)
 library(readxl)
 library(purrr)
 library(readr)
-library(mgcv)   # voor s(..., bs = "cc")
+library(mgcv)
 
 
 #########
@@ -41,28 +41,6 @@ tomst_files <- file.path(
   paste0("TOMST_filtered_distance_temp_20230708_", hour_str, "00.csv")
 )
 
-# model_times <- lubridate::ymd_h(c("2023-07-08 00", "2023-07-08 04", "2023-07-08 08",
-#                                   "2023-07-08 12", "2023-07-08 16", "2023-07-08 20"))
-#
-# res_list   <- list(
-#   readRDS("Data/model_result_files/model_results_0h.rds"),
-#   readRDS("Data/model_result_files/model_results_4h.rds"),
-#   readRDS("Data/model_result_files/model_results_8h.rds"),
-#   readRDS("Data/model_result_files/model_results_12h.rds"),
-#   readRDS("Data/model_result_files/model_results_16h.rds"),
-#   readRDS("Data/model_result_files/model_results_20h.rds")
-# )
-#
-# tomst_files <- c(
-#   "Data/model_result_files/TOMST_filtered_distance_temp_0h.csv",
-#   "Data/model_result_files/TOMST_filtered_distance_temp_4h.csv",
-#   "Data/model_result_files/TOMST_filtered_distance_temp_8h.csv",
-#   "Data/model_result_files/TOMST_filtered_distance_temp_12h.csv",
-#   "Data/model_result_files/TOMST_filtered_distance_temp_16h.csv",
-#   "Data/model_result_files/TOMST_filtered_distance_temp_20h.csv"
-# )
-#
-# tomst_times <- model_times
 
 req_height = 1 # (m)
 length_transect = 135 # (m)

@@ -128,52 +128,6 @@ p_PCA_space <- ggplot(scores, aes(x = PC1, y = PC2)) +
 print(p_PCA_space)
 ggsave(paste0(output_path, "PCA_space_", season, ".png"), plot = p_PCA_space, width = 16, height = 14, dpi = 500)
 
-#
-# # PLOT 3: Global step size over generations
-# # ------
-#
-# p_step_size <- generation_log %>%
-#   ggplot(aes(x = iter, y = sigma_proxy)) +
-#   geom_line(colour = "cornflowerblue") + geom_point(colour = "cornflowerblue") +
-#   scale_x_continuous(breaks = seq(min(generation_log$iter), max(generation_log$iter), by = 1)) +
-#   labs(x = "Generation", y = "Step size (unitless)", title = "Global step size over generations",
-#        subtitle = "(Mean parameter SD is used as a proxy for global step size.)") +
-#   theme_bw(base_size = 12)
-# print(p_step_size)
-# ggsave(paste0(output_path, "step_size_", season, ".png"), plot = p_step_size, width = 10, height = 6, dpi = 300)
-#
-#
-# # PLOT 4: Population spread over generations
-# # ------
-#
-# p_population_spread <- generation_log %>%
-#   ggplot(aes(x = iter, y = spread_mean)) +
-#   geom_line(colour = "cornflowerblue") + geom_point(colour = "cornflowerblue") +
-#   scale_x_continuous(breaks = seq(min(generation_log$iter), max(generation_log$iter), by = 1)) +
-#   labs(x = "Generation", y = "Population spread (unitless)",
-#        title = "Population spread over generations",
-#        subtitle = "(Square root over mean eigenvalue of covariance matrix is used as a proxy for population spread.\n An eigenvalue is the weight of a search direction within the parameter space.)") +
-#   theme_bw(base_size = 12)
-# print(p_population_spread)
-# ggsave(paste0(output_path, "population_spread_", season, ".png"), plot = p_population_spread, width = 10, height = 6, dpi = 300)
-#
-#
-# # PLOT 5: Change in population center between generations
-# # ------
-# generation_log_plot <- generation_log %>%
-#   mutate(iter_mid = iter - 0.5)  # zet het punt tussen huidige en vorige generatie
-#
-# p_center_change <- generation_log_plot %>%
-#   ggplot(aes(x = iter_mid, y = mean_step)) +
-#   geom_line(colour = "cornflowerblue") + geom_point(colour = "cornflowerblue") +
-#   scale_x_continuous(breaks = seq(min(generation_log$iter), max(generation_log$iter), by = 1)) +
-#   labs(x = "Generation", y = "Change", title = "Change in population center from one generation to the next",
-#        subtitle = "(Euclidean distance between consecutive generation means is used as a proxy for this change.)") +
-#   theme_bw(base_size = 12)
-# print(p_center_change)
-# ggsave(paste0(output_path, "center_change_", season, ".png"), plot = p_center_change, width = 10, height = 6, dpi = 300)
-
-
 
 
 end_analysis <- Sys.time()

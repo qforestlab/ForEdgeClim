@@ -1,5 +1,5 @@
 ############################################################################################
-# This script optimizes ForEdgeClim parameters with the CMA-ES algorithm (via cmaesr).
+# This script optimizes ForEdgeClim parameters for every season with the CMA-ES algorithm (via cmaesr).
 #
 # Author: Emma Van de Walle - Q-ForestLab
 ############################################################################################

@@ -102,18 +102,7 @@ focus_params <- c("infl_macro", "infl_soil", "g_macro",
 SW_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
 # Longwave parameter sequence
 LW_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
-#
-# focus_colors = c(
-#   "blue",
-#   "blue4",
-#   "orange",
-#   "red",
-#   "blue3",
-#   "orange3",
-#   "red3",
-#   "red4",
-#   "orange4"
-# )
+
 focus_colors <- c(
   "#3B4CC0",  # deep blue
   "#5E7FDB",  # blue
@@ -272,8 +261,8 @@ p_condition_focused_n <- ggplot(mean_combined_focusedplus_n, aes(x = mean_index,
     axis.text     = element_text(size = 40),
     legend.position = "none",
     legend.direction = "vertical",
-    legend.title    = element_blank(), #element_text(size = 40),
-    legend.text     = element_blank(), #element_text(size = 40),
+    legend.title    = element_blank(),
+    legend.text     = element_blank(),
     legend.key.size = unit(1.0, "cm"),
     legend.spacing.x = unit(0.5, "cm"),
     strip.text = element_text(size = 40),
