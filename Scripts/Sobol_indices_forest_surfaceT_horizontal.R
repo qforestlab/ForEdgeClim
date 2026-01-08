@@ -112,7 +112,7 @@ focus_colors <- c(
   "#87AFDE",  # light blue
   "#F4A259",  # orange
   "#A4161A",  # dark red
-  "#6A040F",   # very dark red
+  "#6A040F",  # very dark red
   "#E98B1E"   # deep orange
   )
 

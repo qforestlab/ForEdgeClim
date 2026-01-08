@@ -34,6 +34,10 @@ plots_lw <- function(lw_rad_2D, output_path){
   # F_d_down plot:
   F_d_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_down)) +
     geom_tile() +
+    scale_x_continuous(
+      breaks = seq(0, 150, by = 50),
+      labels = rev(seq(0, 150, by = 50))
+    ) +
     annotation_custom(
       grob = bg_grob,
       xmin = 0, xmax = 140,
@@ -46,7 +50,7 @@ plots_lw <- function(lw_rad_2D, output_path){
              label = "towards forest core", size = 5) +
     annotate("text", x = 120, y = 40,
              label = "towards forest edge", size = 5) +
-    scale_fill_viridis_c(option = "inferno",
+    scale_fill_viridis_c(option = "inferno",  limits = c(300, 850), breaks = c(400, 600, 800),
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(a) Longwave downward radiation"),
          x = "\n", y = "Height (m)\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) ) +#,
@@ -71,15 +75,19 @@ plots_lw <- function(lw_rad_2D, output_path){
   # F_d_up plot:
   F_d_up = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_up)) +
     geom_tile() +
+    scale_x_continuous(
+      breaks = seq(0, 150, by = 50),
+      labels = rev(seq(0, 150, by = 50))
+    ) +
     annotation_custom(
       grob = bg_grob,
       xmin = 0, xmax = 140,
       ymin = 0, ymax = 40
     ) +
-    scale_fill_viridis_c(option = "inferno",
+    scale_fill_viridis_c(option = "inferno", limits = c(300, 850), breaks = c(400, 600, 800),
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(b) Longwave upward radiation"),
-         x = "\nDistance from forest core (m)", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) )+ #,
+         x = "\nDistance from forest edge (m)", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) )+ #,
          #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +

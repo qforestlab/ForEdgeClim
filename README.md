@@ -97,7 +97,7 @@ for (current_datetime in datetime_series) {
   plots_dtm_struct(dtm = voxel_TLS$dtm, grid = voxel_TLS$grid, output_path)
 
   # Shortwave radiation plots
-   plots_sw(sw_rad_2D = res$sw_rad_2D, output_path)
+  plots_sw(sw_rad_2D = res$sw_rad_2D, output_path)
 
   # Longwave radiation plots
   plots_lw(lw_rad_2D = res$lw_rad_2D, output_path)
@@ -106,7 +106,7 @@ for (current_datetime in datetime_series) {
   plots_flux(res$micro_grid, res$net_radiation, res$sensible_flux, res$latent_flux, res$ground_flux, output_path, current_datetime)
 
   # Temperature plots
-   plots_temp(res$micro_grid, res$air_temperature, output_path, current_datetime)
+  plots_temp(res$micro_grid, res$air_temperature, output_path, current_datetime)
 
 }
 end_timeseries = Sys.time()

@@ -43,12 +43,17 @@ plots_sw <- function(sw_rad_2D, output_path){
   # F_d_down plot:
   F_d_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_down)) +
     geom_tile()+
+    scale_x_continuous(
+      breaks = seq(0, 150, by = 50),
+      labels = rev(seq(0, 150, by = 50))
+    ) +
     annotation_custom(
       grob = bg_grob,
       xmin = 0, xmax = 140,
       ymin = 0, ymax = 40
     ) +
-    scale_fill_viridis_c(option = "inferno",
+    scale_fill_viridis_c(option = "inferno", limits = c(0, 700), breaks = c(0, 50, 100, 250, 600),
+                         trans = scales::pseudo_log_trans(sigma = 5), oob = scales::squish,
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(b) Shortwave diffuse downward radiation"),
          x = "\n", y = "Height (m)\n", fill = bquote("Flux"~(W~m^{-2})*"      ") )+#,
@@ -71,6 +76,10 @@ plots_sw <- function(sw_rad_2D, output_path){
   # F_d_up plot:
   F_d_up = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_d_up)) +
     geom_tile()+
+    scale_x_continuous(
+      breaks = seq(0, 150, by = 50),
+      labels = rev(seq(0, 150, by = 50))
+    ) +
     annotation_custom(
       grob = bg_grob,
       xmin = 0, xmax = 140,
@@ -83,10 +92,11 @@ plots_sw <- function(sw_rad_2D, output_path){
              label = "towards forest core", size = 5) +
     annotate("text", x = 120, y = 40,
              label = "towards forest edge", size = 5) +
-    scale_fill_viridis_c(option = "inferno",
+    scale_fill_viridis_c(option = "inferno",limits = c(0, 700), breaks = c(0, 50, 100, 250, 600),
+                         trans = scales::pseudo_log_trans(sigma = 5), oob = scales::squish,
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(c) Shortwave diffuse upward radiation"),
-         x = "\nDistance from forest core (m)", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      ") )+#,
+         x = "\nDistance from forest edge (m)", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      ") )+#,
          #caption = caption) +
     coord_fixed(ratio = 1) +
     theme_bw() +
@@ -105,12 +115,17 @@ plots_sw <- function(sw_rad_2D, output_path){
   # F_b_down plot:
   F_b_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_b_down)) +
     geom_tile()+
+    scale_x_continuous(
+      breaks = seq(0, 150, by = 50),
+      labels = rev(seq(0, 150, by = 50))
+    ) +
     annotation_custom(
       grob = bg_grob,
       xmin = 0, xmax = 140,
       ymin = 0, ymax = 40
     ) +
-    scale_fill_viridis_c(option = "inferno",
+    scale_fill_viridis_c(option = "inferno", limits = c(0, 700), breaks = c(0, 50, 100, 250, 600),
+                         trans = scales::pseudo_log_trans(sigma = 5), oob = scales::squish,
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(a) Shortwave direct-beam radiation"),
          fill  = bquote("Flux"~(W~m^{-2})*"      "), x = "\n", y = "\n")+
@@ -123,14 +138,14 @@ plots_sw <- function(sw_rad_2D, output_path){
       axis.text = element_text(size = 16),
       strip.text = element_text(size = 18),
       legend.title = element_text(size = 18),
-      legend.text  = element_text(size = 16),
-      plot.background = element_rect(fill = "transparent", colour = NA),
-      panel.background = element_rect(fill = "transparent", colour = NA),
-      legend.background = element_rect(fill = "transparent", colour = NA),
-      legend.box.background = element_rect(fill = "transparent", colour = NA)
+      legend.text  = element_text(size = 16)#,
+      # plot.background = element_rect(fill = "transparent", colour = NA),
+      # panel.background = element_rect(fill = "transparent", colour = NA),
+      # legend.background = element_rect(fill = "transparent", colour = NA),
+      # legend.box.background = element_rect(fill = "transparent", colour = NA)
     )
 
-  ggsave(paste0(output_path, '/SW_2D_F_b_down.png'), plot = F_b_down, width = 9, height = 3, dpi = 500, bg = "transparent")
+  ggsave(paste0(output_path, '/SW_2D_F_b_down.png'), plot = F_b_down, width = 9, height = 3, dpi = 500)#, bg = "transparent")
 
 
   # F_d_down + F_b_down plot:

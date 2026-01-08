@@ -140,6 +140,10 @@ p_all <- ggplot(anim_df, aes(
   colour = time_lbl,
   group = interaction(model, variant, time_lbl)
 )) +
+  scale_x_continuous(
+    breaks = c(0, 50, 100, 135),
+    labels = c(135, 85, 35, 0)
+  )+
   # background
   annotation_custom(
     grob = bg_grob,
@@ -198,7 +202,7 @@ p_all <- ggplot(anim_df, aes(
     shape    = guide_legend(order = 3, title = "Data: ", direction = "horizontal", override.aes = list(size = 3))
   ) +
   coord_cartesian(xlim = c(0, length_transect), ylim = c(15, 32)) +
-  labs(x = "Distance from forest core (m)\n", y = "Temperature (°C)", title = "(a) Horizontal air temperature") +
+  labs(x = "Distance from forest edge (m)\n", y = "Temperature (°C)", title = "(a) Horizontal air temperature") +
   theme_bw(base_size = 18) +
   theme(
     plot.title = element_text(size = 35),

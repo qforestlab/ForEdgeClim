@@ -129,7 +129,7 @@ m_o_time_and_position <- ggplot(val_data_all, aes(x = obs, y = mod)) +
 
 print(m_o_time_and_position)
 ggsave(file.path(output_path, paste0("model_vs_obs_over_time_and_position_", base_season, "_both.png")),
-       plot = m_o_time_and_position, width = 16, height = 10, dpi = 500)
+       plot = m_o_time_and_position, width = 16, height = 10, dpi = 300)
 
 
 
@@ -174,7 +174,7 @@ time_residual <- ggplot(val_data_all, aes(x = datetime, y = resid)) +
 
 print(time_residual)
 ggsave(file.path(output_path, paste0("time_series_residual_", base_season, "_both.png")),
-       plot = time_residual, width = 16, height = 10, dpi = 500)
+       plot = time_residual, width = 16, height = 10, dpi = 300)
 
 # -----------------
 # RESIDUALS: grouped by hour-of-day (24h) per model
@@ -188,8 +188,8 @@ val_data_all_h <- val_data_all %>%
 
 hour_residual <- ggplot(val_data_all_h, aes(x = hour_f, y = resid)) +
   geom_boxplot(
-    fill = NA,            # geen vulling
-    colour = "blue",      # box + whiskers
+    fill = NA,
+    colour = "blue",
     linewidth = 1,
     outlier.colour = "blue",
     outlier.alpha = 0.4
@@ -228,7 +228,7 @@ hour_residual <- ggplot(val_data_all_h, aes(x = hour_f, y = resid)) +
 print(hour_residual)
 ggsave(
   file.path(output_path, paste0("residual_by_hour_", base_season, "_both.png")),
-  plot = hour_residual, width = 16, height = 10, dpi = 500
+  plot = hour_residual, width = 16, height = 10, dpi = 300
 )
 
 
@@ -249,8 +249,8 @@ val_data_x <- val_data_all %>%
 
 x_residual <- ggplot(val_data_x, aes(x = TMS_position_f, y = resid)) +
   geom_boxplot(
-    fill = NA,            # geen vulling
-    colour = "blue",      # box + whiskers
+    fill = NA,
+    colour = "blue",
     linewidth = 1,
     outlier.colour = "blue",
     outlier.alpha = 0.4
@@ -258,16 +258,14 @@ x_residual <- ggplot(val_data_x, aes(x = TMS_position_f, y = resid)) +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "red", linewidth = 1) +
   labs(
     y = "Residual (°C)",
-    x = "Distance from forest core (m)",
-    title = "(c) Residuals grouped by distance from forest core"
+    x = "Distance from forest edge (m)",
+    title = "(c) Residuals grouped by distance from forest edge"
   ) +
   theme_bw() +
   scale_x_discrete(
-    breaks = function(x) {
-      x_num <- suppressWarnings(as.numeric(x))
-      x[!is.na(x_num) & (x_num %% 30 == 0)]
-    }
-  ) +
+    breaks = c("0", "45", "90", "135"),
+    labels = c("135", "90", "45", "0")
+  )+
   theme(
     plot.title  = element_text(size = 40),
     axis.title  = element_text(size = 40),
@@ -281,7 +279,7 @@ print(x_residual)
 ggsave(
   file.path(output_path,
             paste0("residual_by_TMS_position_", base_season, "_both.png")),
-  plot = x_residual, width = 16, height = 10, dpi = 500
+  plot = x_residual, width = 16, height = 10, dpi = 300
 )
 
 
@@ -306,8 +304,8 @@ val_data_x_ver <- val_data_all %>%
 
 x_residual_ver <- ggplot(val_data_x_ver, aes(x = TMS_position_f, y = resid)) +
   geom_boxplot(
-    fill = NA,            # geen vulling
-    colour = "blue",      # box + whiskers
+    fill = NA,
+    colour = "blue",
     linewidth = 1,
     outlier.colour = "blue",
     outlier.alpha = 0.4
@@ -332,7 +330,7 @@ print(x_residual_ver)
 ggsave(
   file.path(output_path,
             paste0("residual_by_TMS_position_ver_", base_season, "_both.png")),
-  plot = x_residual_ver, width = 16, height = 10, dpi = 500
+  plot = x_residual_ver, width = 16, height = 10, dpi = 300
 )
 
 

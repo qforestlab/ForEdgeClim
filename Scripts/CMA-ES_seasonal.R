@@ -178,7 +178,7 @@ evaluate_par <- function(par) {
 
       tryCatch({
 
-        # ---- Imports (zelfde als objective) ----
+        # ---- Imports ----
         import_RMI_observations(datetime)
         if (is_empty(F_sky_lw)) {
           assign("F_sky_lw", sigma_SB * 0.75 * macro_temp^4, envir = .GlobalEnv)
@@ -262,7 +262,7 @@ evaluate_par <- function(par) {
     future.seed = TRUE
   )
 
-  # ---- Aggregate identiek voor RMSE & metrics ----
+  # ---- Aggregate ----
   sse_total         <- sum(vapply(parts, `[[`, numeric(1), "sse"),         na.rm = TRUE)
   n_total           <- sum(vapply(parts, `[[`, integer(1), "n"))
   sum_sim_total     <- sum(vapply(parts, `[[`, numeric(1), "sum_sim"),     na.rm = TRUE)

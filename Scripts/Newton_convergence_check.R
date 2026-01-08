@@ -115,7 +115,7 @@ for (current_datetime in datetime_series) {
       geom_point() +
       geom_line(linewidth = 0.5) +
       scale_colour_gradientn(
-        name  = "Distance to macro boundary (m)",
+        name  = "Distance to macroboundary (m)",
         colours = c("red", "orange", "lightblue", "blue"),
         values = scales::rescale(c(min(trace_wide$dist_macro),
                                    quantile(trace_wide$dist_macro, 0.25),
@@ -150,7 +150,7 @@ for (current_datetime in datetime_series) {
       geom_point() +
       geom_line(linewidth = 0.5) +
       scale_colour_gradientn(
-        name  = "Distance to macro boundary (m)",
+        name  = "Distance to macroboundary (m)",
         colours = c("red", "orange", "lightblue", "blue"),
         values = scales::rescale(c(min(trace_wide$dist_macro),
                                    quantile(trace_wide$dist_macro, 0.25),
@@ -199,7 +199,7 @@ for (current_datetime in datetime_series) {
     p_conv <- p_conv &
       guides(
         colour = guide_colourbar(
-          title          = "Distance to macro boundary (m)",
+          title          = "Distance to macroboundary (m)",
           title.position = "top",
           barwidth       = unit(6, "cm"),
           barheight      = unit(1, "cm"),

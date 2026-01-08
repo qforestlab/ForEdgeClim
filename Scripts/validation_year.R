@@ -8,12 +8,12 @@
 suppressPackageStartupMessages({
   library(ForEdgeClim)
   library(dplyr)
-  library(Metrics) # voor r2, nse etc.
+  library(Metrics)
   library(tibble)
   library(tidyr)
   library(ggplot2)
   library(future)
-  library(rlang) # voor is_empty
+  library(rlang)
   library(future.apply)
 })
 
@@ -130,7 +130,7 @@ parts <- future_lapply(
   all_datetimes,
   FUN = function(dt) {
 
-    # make params accessible in de worker-GlobalEnv
+    # make params accessible in the worker-GlobalEnv
     list2env(params, envir = .GlobalEnv)
 
     # model inputs

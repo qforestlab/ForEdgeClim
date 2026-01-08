@@ -54,6 +54,10 @@ plots_dtm_struct <- function(dtm, grid, output_path){
 
   density_plot = ggplot(average_density, aes(x = X, y = Z, fill = mean_density)) +
     geom_tile(aes(fill = ifelse(mean_density == 0, NA, mean_density)), na.rm = TRUE) +
+    scale_x_continuous(
+      breaks = seq(0, 150, by = 50),
+      labels = rev(seq(0, 150, by = 50))
+    ) +
     annotation_custom(
       grob = bg_grob,
       xmin = 0, xmax = 140,
@@ -73,7 +77,7 @@ plots_dtm_struct <- function(dtm, grid, output_path){
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")
     ) +
     labs(title = paste("Normalised density of forest structure"),
-                  x = "Distance from forest core (m)", y = "Height (m)", fill = "Density \n(unitless)")+
+                  x = "Distance from forest edge (m)", y = "Height (m)", fill = "Density \n(unitless)")+
     coord_fixed(ratio = 1) +
     theme_bw() +
     theme(
