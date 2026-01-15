@@ -1,10 +1,6 @@
 #' Generate a virtual structural grid with trees
 #'
 #' @param season Season as string: "summer", "winter", "spring", "autumn"
-#' @param output_folder Map to save 3D-plot (Default "Output/")
-#' @param phi Viewing angle for 3D-plot (Default -80)
-#' @param trunk_size Stem size in plot (Default 1)
-#' @param canopy_size Canopy/leave size in plot (Default 1)
 #' @return A dataframe with the generated voxel structure
 #' @importFrom dplyr mutate bind_rows
 #' @export
@@ -111,7 +107,17 @@ generate_fictive_grid <- function(season) {
   # # Combine ground layer with voxel grid
   # voxel_grid <- bind_rows(ground_layer, voxel_grid) %>%
   #   arrange(X, Y, Z)
-  return(voxel_grid)
+
+  # create a plane DTM
+  dtm <- expand.grid(
+    X = 1:135,
+    Y = 1:30
+  )
+
+  dtm$Z <- 0
+
+
+  return(list(grid = voxel_grid, dtm = dtm))
 }
 
 

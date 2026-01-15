@@ -20,8 +20,7 @@ plots_dtm_struct <- function(dtm, grid, output_path){
   dtm_plot = ggplot(dtm, aes(x = X - min(X), y = Y - min(Y), fill = Z - min(Z))) +
     geom_tile() +
     scale_fill_viridis_c(option = "magma",
-                                  guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) + # Mooie kleurenschaal
-    coord_fixed() +
+                                  guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     theme_bw() +
     theme(axis.title.y = element_text(angle = 0, vjust = 0.5, margin = margin(r = 10))) +
     labs(title = "Digital terrain model (DTM), top view",

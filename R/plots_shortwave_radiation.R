@@ -179,7 +179,7 @@ plots_sw <- function(sw_rad_2D, output_path){
   ############
 
   # F_down plot for 3D plot
-  F_down = ggplot(final_slice_results_2D, aes(x = X, y = Z, fill = F_b_down + F_d_down)) +
+  F_down = ggplot(final_avg_results_2D, aes(x = X, y = Z, fill = avg_F_b_down + avg_F_d_down)) +
     geom_tile()+
     annotation_custom(
       grob = bg_grob,

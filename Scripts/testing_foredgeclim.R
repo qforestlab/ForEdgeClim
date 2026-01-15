@@ -71,7 +71,7 @@ for (current_datetime in datetime_series) {
   #############
 
   res = run_foredgeclim(voxel_TLS$grid, current_datetime)
-  saveRDS(res, paste0(output_path, '/model_results_calibrated_year.rds'))
+  saveRDS(res, paste0(output_path, '/model_results.rds'))
 
   ############
   # PLOTTING #

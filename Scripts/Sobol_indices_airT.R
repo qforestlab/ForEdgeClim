@@ -3,8 +3,8 @@
 # seasons and time points are merged together to get an overview of the
 # Quantities of Interest (4 seasons x 3 time points x 3 metrics).
 # This script runs for the horizontal line, along the central Y-line at Z = 1 m height.
-# This script analyzes the forest surface temperature. Sobol_indices_airT_horizontal.R is similar,
-# but for the air temperature.
+# This script analyzes the air temperature. Sobol_indices_forest_surfaceT_horizontal.R is similar,
+# but for the forest surface temperature.
 ###############################################################################
 
 
@@ -15,6 +15,7 @@ library(purrr)
 library(tidyr)
 library(forcats)
 library(latex2exp)
+library(glue)
 
 #########
 # INPUT #
@@ -24,64 +25,65 @@ input_path <- "Output/sensitivity_analysis/Sobol_QoI/data/"
 output_path_plots <- "Output/sensitivity_analysis/Sobol_QoI/plots_output/"
 output_path_numbers <- "Output/sensitivity_analysis/Sobol_QoI/numbers_output/"
 
+output_plot_focused_parameters_by_condition_normalized <- "Sobol_indices_airT_vertical.png"
 
-output_plot_focused_parameters_by_condition_normalized <- "Sobol_indices_forest_surfaceT_horizontal.png"
+direction = 'v' # or 'h'
 
 # File list with labels
 files_info <- tribble(
   ~file, ~label,
   # winter files
     # night
-  "400samples_25parameters_01h_13012025_avTf_h.rds",     "Wi_Ni_≈T",
-  "400samples_25parameters_01h_13012025_SDTf_h.rds",     "Wi_Ni_σT",
-  "400samples_25parameters_01h_13012025_gradTf_h.rds",   "Wi_Ni_∇T",
+  glue("400samples_25parameters_01h_13012025_avTa_{direction}.rds"),     "Wi_Ni_≈T",
+  glue("400samples_25parameters_01h_13012025_SDTa_{direction}.rds"),     "Wi_Ni_σT",
+  glue("400samples_25parameters_01h_13012025_gradTa_{direction}.rds"),   "Wi_Ni_∇T",
     # morning
-  "400samples_25parameters_08h_13012025_avTf_h.rds",     "Wi_Mo_≈T",
-  "400samples_25parameters_08h_13012025_SDTf_h.rds",     "Wi_Mo_σT",
-  "400samples_25parameters_08h_13012025_gradTf_h.rds",   "Wi_Mo_∇T",
+  glue("400samples_25parameters_08h_13012025_avTa_{direction}.rds"),     "Wi_Mo_≈T",
+  glue("400samples_25parameters_08h_13012025_SDTa_{direction}.rds"),     "Wi_Mo_σT",
+  glue("400samples_25parameters_08h_13012025_gradTa_{direction}.rds"),   "Wi_Mo_∇T",
     # noon
-  "400samples_25parameters_12h_13012025_avTf_h.rds",     "Wi_No_≈T",
-  "400samples_25parameters_12h_13012025_SDTf_h.rds",     "Wi_No_σT",
-  "400samples_25parameters_12h_13012025_gradTf_h.rds",   "Wi_No_∇T",
+  glue("400samples_25parameters_12h_13012025_avTa_{direction}.rds"),     "Wi_No_≈T",
+  glue("400samples_25parameters_12h_13012025_SDTa_{direction}.rds"),     "Wi_No_σT",
+  glue("400samples_25parameters_12h_13012025_gradTa_{direction}.rds"),   "Wi_No_∇T",
   # spring files
     # night
-  "400samples_25parameters_01h_30042025_avTf_h.rds",     "Sp_Ni_≈T",
-  "400samples_25parameters_01h_30042025_SDTf_h.rds",     "Sp_Ni_σT",
-  "400samples_25parameters_01h_30042025_gradTf_h.rds",   "Sp_Ni_∇T",
+  glue("400samples_25parameters_01h_30042025_avTa_{direction}.rds"),     "Sp_Ni_≈T",
+  glue("400samples_25parameters_01h_30042025_SDTa_{direction}.rds"),     "Sp_Ni_σT",
+  glue("400samples_25parameters_01h_30042025_gradTa_{direction}.rds"),   "Sp_Ni_∇T",
     # morning
-  "400samples_25parameters_05h_30042025_avTf_h.rds",     "Sp_Mo_≈T",
-  "400samples_25parameters_05h_30042025_SDTf_h.rds",     "Sp_Mo_σT",
-  "400samples_25parameters_05h_30042025_gradTf_h.rds",   "Sp_Mo_∇T",
+  glue("400samples_25parameters_05h_30042025_avTa_{direction}.rds"),     "Sp_Mo_≈T",
+  glue("400samples_25parameters_05h_30042025_SDTa_{direction}.rds"),     "Sp_Mo_σT",
+  glue("400samples_25parameters_05h_30042025_gradTa_{direction}.rds"),   "Sp_Mo_∇T",
     # noon
-  "400samples_25parameters_12h_30042025_avTf_h.rds",     "Sp_No_≈T",
-  "400samples_25parameters_12h_30042025_SDTf_h.rds",     "Sp_No_σT",
-  "400samples_25parameters_12h_30042025_gradTf_h.rds",   "Sp_No_∇T",
+  glue("400samples_25parameters_12h_30042025_avTa_{direction}.rds"),     "Sp_No_≈T",
+  glue("400samples_25parameters_12h_30042025_SDTa_{direction}.rds"),     "Sp_No_σT",
+  glue("400samples_25parameters_12h_30042025_gradTa_{direction}.rds"),   "Sp_No_∇T",
   # summer files
     # night
-  "400samples_25parameters_01h_07072023_avTf_h.rds",     "Su_Ni_≈T",
-  "400samples_25parameters_01h_07072023_SDTf_h.rds",     "Su_Ni_σT",
-  "400samples_25parameters_01h_07072023_gradTf_h.rds",   "Su_Ni_∇T",
+  glue("400samples_25parameters_01h_07072023_avTa_{direction}.rds"),     "Su_Ni_≈T",
+  glue("400samples_25parameters_01h_07072023_SDTa_{direction}.rds"),     "Su_Ni_σT",
+  glue("400samples_25parameters_01h_07072023_gradTa_{direction}.rds"),   "Su_Ni_∇T",
     # morning
-  "400samples_25parameters_05h_07072023_avTf_h.rds",     "Su_Mo_≈T",
-  "400samples_25parameters_05h_07072023_SDTf_h.rds",     "Su_Mo_σT",
-  "400samples_25parameters_05h_07072023_gradTf_h.rds",   "Su_Mo_∇T",
+  glue("400samples_25parameters_05h_07072023_avTa_{direction}.rds"),     "Su_Mo_≈T",
+  glue("400samples_25parameters_05h_07072023_SDTa_{direction}.rds"),     "Su_Mo_σT",
+  glue("400samples_25parameters_05h_07072023_gradTa_{direction}.rds"),   "Su_Mo_∇T",
     # noon
-  "400samples_25parameters_12h_07072023_avTf_h.rds",     "Su_No_≈T",
-  "400samples_25parameters_12h_07072023_SDTf_h.rds",     "Su_No_σT",
-  "400samples_25parameters_12h_07072023_gradTf_h.rds",   "Su_No_∇T",
+  glue("400samples_25parameters_12h_07072023_avTa_{direction}.rds"),     "Su_No_≈T",
+  glue("400samples_25parameters_12h_07072023_SDTa_{direction}.rds"),     "Su_No_σT",
+  glue("400samples_25parameters_12h_07072023_gradTa_{direction}.rds"),   "Su_No_∇T",
   # autumn files
     # night
-  "400samples_25parameters_01h_01102023_avTf_h.rds",     "Au_Ni_≈T",
-  "400samples_25parameters_01h_01102023_SDTf_h.rds",     "Au_Ni_σT",
-  "400samples_25parameters_01h_01102023_gradTf_h.rds",   "Au_Ni_∇T",
+  glue("400samples_25parameters_01h_01102023_avTa_{direction}.rds"),     "Au_Ni_≈T",
+  glue("400samples_25parameters_01h_01102023_SDTa_{direction}.rds"),     "Au_Ni_σT",
+  glue("400samples_25parameters_01h_01102023_gradTa_{direction}.rds"),   "Au_Ni_∇T",
     # morning
-  "400samples_25parameters_06h_01102023_avTf_h.rds",     "Au_Mo_≈T",
-  "400samples_25parameters_06h_01102023_SDTf_h.rds",     "Au_Mo_σT",
-  "400samples_25parameters_06h_01102023_gradTf_h.rds",   "Au_Mo_∇T",
+  glue("400samples_25parameters_06h_01102023_avTa_{direction}.rds"),     "Au_Mo_≈T",
+  glue("400samples_25parameters_06h_01102023_SDTa_{direction}.rds"),     "Au_Mo_σT",
+  glue("400samples_25parameters_06h_01102023_gradTa_{direction}.rds"),   "Au_Mo_∇T",
     # noon
-  "400samples_25parameters_12h_01102023_avTf_h.rds",     "Au_No_≈T",
-  "400samples_25parameters_12h_01102023_SDTf_h.rds",     "Au_No_σT",
-  "400samples_25parameters_12h_01102023_gradTf_h.rds",   "Au_No_∇T"
+  glue("400samples_25parameters_12h_01102023_avTa_{direction}.rds"),     "Au_No_≈T",
+  glue("400samples_25parameters_12h_01102023_SDTa_{direction}.rds"),     "Au_No_σT",
+  glue("400samples_25parameters_12h_01102023_gradTa_{direction}.rds"),   "Au_No_∇T"
 
 )
 
@@ -95,7 +97,7 @@ param_order <- c(
   "e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h",
   "h", "g_macro", "infl_macro", "infl_soil", "infl_forest", "g_forest", "p_ground", "g_soil", "k_soil"
 )
-# Focused parameter sequence in order from most influenteal to least influential (to be plot in this order)
+# Focused parameter sequence in order from most influential to least influential (to be plot in this order)
 focus_params <- c("infl_macro", "infl_soil", "g_macro",
                   "k_soil", "infl_forest", "g_soil",
                   "h", "p_ground", "g_forest")
@@ -114,7 +116,8 @@ focus_colors <- c(
   "#A4161A",  # dark red
   "#6A040F",  # very dark red
   "#E98B1E"   # deep orange
-  )
+)
+
 
 
 # Color palette
@@ -125,23 +128,19 @@ all_colors <- c(
 )
 
 # legend labels
-labels_expr <- c(
-  infl_macro  = expression(italic(i)[m]),
-  infl_soil   = expression(italic(i)[s]),
-  g_macro     = expression(italic(g)[m]),
-  k_soil      = expression(italic(k)[s]),
-  infl_forest = expression(italic(i)[f]),
-  g_soil      = expression(italic(g)[s]),
-  h           = expression(italic(h)),
-  p_ground    = expression(italic(p)),
-  g_forest    = expression(italic(g)[f]),
-  `SW parameters` = "SW parameters",
-  `LW parameters` = "LW parameters"
+labels_latex <- c(
+  "infl_macro"    = TeX("$i_m$"),
+  "infl_soil"     = TeX("$i_s$"),
+  "g_macro"       = TeX("$g_m$"),
+  "k_soil"        = TeX("$k_s$"),
+  "infl_forest"   = TeX("$i_f$"),
+  "g_soil"        = TeX("$g_s$"),
+  "h"             = TeX("$h$"),
+  "p_ground"      = TeX("$p$"),
+  "g_forest"      = TeX("$g_f$"),
+  "SW parameters" = "SW parameters",
+  "LW parameters" = "LW parameters"
 )
-
-scale_fill_manual(values = all_colors, labels = labels_expr)
-
-
 
 # Load, combine and normalize
 sobol_df <- files_info %>%
@@ -249,9 +248,9 @@ mean_combined_focusedplus_n <- mean_combined_n %>%
 p_condition_focused_n <- ggplot(mean_combined_focusedplus_n, aes(x = mean_index, y = condition, fill = grouped_param)) +
   geom_col(width = 0.5) +
   facet_wrap(~ group, scales = "free_y", ncol = 1) +
-  scale_fill_manual(values = all_colors, labels = labels_expr) +
+  scale_fill_manual(values = all_colors, labels = labels_latex) +
   labs(
-    title = "(b) Influence on forest surface temperature",
+    title = "(a) Influence on air temperature",
     x = "Average normalised total-order Sobol-index",
     y = "Condition",
     fill = "Parameter"#,
@@ -261,14 +260,12 @@ p_condition_focused_n <- ggplot(mean_combined_focusedplus_n, aes(x = mean_index,
   guides(fill = guide_legend(ncol = 1, reverse = TRUE)) +
   theme(
     plot.title = element_text(size = 40),
-    axis.title.x    = element_text(size = 40),
-    axis.title.y = element_blank(),
-    axis.text.x     = element_text(size = 40),
-    axis.text.y     = element_blank(),
-    legend.position = "right",
+    axis.title    = element_text(size = 40),
+    axis.text     = element_text(size = 40),
+    legend.position = "none",
     legend.direction = "vertical",
-    legend.title    = element_text(size = 40),
-    legend.text     = element_text(size = 40),
+    legend.title    = element_blank(),
+    legend.text     = element_blank(),
     legend.key.size = unit(1.0, "cm"),
     legend.spacing.x = unit(0.5, "cm"),
     strip.text = element_text(size = 40),
@@ -347,13 +344,11 @@ avg_param_by_season  <- sobol_df %>% filter(!is.na(season)) %>%
   group_by(season, parameter) %>%
   summarise(mean_index = mean(norm_value), sd_index = sd(norm_value), .groups = "drop")
 
-# get ranges on the contributions for top 4 parameters across conditions
-#target_params <- c("infl_macro", "infl_soil", "g_forest", "g_macro")
-# top 1 parameter
-target_params <- c("g_forest")
-# # SW parameters:
-#target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
-# # LW parameters:
+# get ranges on the contributions for top 3 parameters across conditions
+#target_params <- c("infl_macro", "infl_soil", "g_macro")
+# SW parameters:
+target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
+# LW parameters:
 #target_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 # rad params
 # target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h",
@@ -462,20 +457,20 @@ range_metric_rank <- rank_consistency_metric %>%
 #------------------------------------------------------------------------------
 
 # export tables
-write_csv(top3_per_label,          file.path(output_path_numbers, "top3_per_condition_fh.csv"))
-write_csv(concentration_per_label, file.path(output_path_numbers, "concentration_per_condition_fh.csv"))
-write_csv(process_share_per_label, file.path(output_path_numbers, "process_share_per_condition_fh.csv"))
+write_csv(top3_per_label,          file.path(output_path_numbers, "top3_per_condition_ah.csv"))
+write_csv(concentration_per_label, file.path(output_path_numbers, "concentration_per_condition_ah.csv"))
+write_csv(process_share_per_label, file.path(output_path_numbers, "process_share_per_condition_ah.csv"))
 
-write_csv(avg_param_by_metric,     file.path(output_path_numbers, "avg_param_by_metric_fh.csv"))
-write_csv(avg_param_by_moment,     file.path(output_path_numbers, "avg_param_by_moment_fh.csv"))
-write_csv(avg_param_by_season,     file.path(output_path_numbers, "avg_param_by_season_fh.csv"))
+write_csv(avg_param_by_metric,     file.path(output_path_numbers, "avg_param_by_metric_ah.csv"))
+write_csv(avg_param_by_moment,     file.path(output_path_numbers, "avg_param_by_moment_ah.csv"))
+write_csv(avg_param_by_season,     file.path(output_path_numbers, "avg_param_by_season_ah.csv"))
 
-write_csv(avg_process_by_metric,   file.path(output_path_numbers, "avg_process_by_metric_fh.csv"))
-write_csv(avg_process_by_moment,   file.path(output_path_numbers, "avg_process_by_moment_fh.csv"))
-write_csv(avg_process_by_season,   file.path(output_path_numbers, "avg_process_by_season_fh.csv"))
+write_csv(avg_process_by_metric,   file.path(output_path_numbers, "avg_process_by_metric_ah.csv"))
+write_csv(avg_process_by_moment,   file.path(output_path_numbers, "avg_process_by_moment_ah.csv"))
+write_csv(avg_process_by_season,   file.path(output_path_numbers, "avg_process_by_season_ah.csv"))
 
-write_csv(rank_consistency_metric, file.path(output_path_numbers, "rank_consistency_metric_fh.csv"))
-write_csv(rank_consistency_moment, file.path(output_path_numbers, "rank_consistency_moment_fh.csv"))
-write_csv(rank_consistency_season, file.path(output_path_numbers, "rank_consistency_season_fh.csv"))
+write_csv(rank_consistency_metric, file.path(output_path_numbers, "rank_consistency_metric_ah.csv"))
+write_csv(rank_consistency_moment, file.path(output_path_numbers, "rank_consistency_moment_ah.csv"))
+write_csv(rank_consistency_season, file.path(output_path_numbers, "rank_consistency_season_ah.csv"))
 
 

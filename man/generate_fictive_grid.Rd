@@ -8,14 +8,6 @@ generate_fictive_grid(season)
 }
 \arguments{
 \item{season}{Season as string: "summer", "winter", "spring", "autumn"}
-
-\item{output_folder}{Map to save 3D-plot (Default "Output/")}
-
-\item{phi}{Viewing angle for 3D-plot (Default -80)}
-
-\item{trunk_size}{Stem size in plot (Default 1)}
-
-\item{canopy_size}{Canopy/leave size in plot (Default 1)}
 }
 \value{
 A dataframe with the generated voxel structure
