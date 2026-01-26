@@ -197,7 +197,7 @@ p_all <- ggplot(anim_df, aes(
     values = c("TOMST observations" = 16)
   ) +
   guides(
-    colour   = guide_legend(order = 1, title = "Time: ", direction = "horizontal", override.aes = list(size = 3)),
+    colour   = guide_legend(order = 1, title = "Time on 8 July 2023: ", direction = "horizontal", override.aes = list(size = 3)),
     linetype = guide_legend(order = 2, title = "Model: ", direction = "horizontal", keywidth = unit (2.5, "cm"), override.aes = list(linewidth = 2)),
     shape    = guide_legend(order = 3, title = "Data: ", direction = "horizontal", override.aes = list(size = 3))
   ) +

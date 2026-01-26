@@ -21,13 +21,9 @@
 run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
 
 
-  #print('🚩 𝙁𝙤𝙧𝙀𝙙𝙜𝙚𝘾𝙡𝙞𝙢')
-  #start = Sys.time()
-  #print('════════════════════════')
   #############################################
   # 2D SHORTWAVE RADIATIVE TRANSFER MODELLING #
   #############################################
-  #print('SW RTM ☀️')
   voxel_grid = structure_grid
   final_results_2D <<- shortwave_two_stream_RTM(datetime, lat, lon, voxel_grid,
                            F_sky_diff_init, F_sky_dir_init,
@@ -52,8 +48,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
   #############################
   # INITIALIZING TEMPERATURES #
   #############################
-
-  #print('Init temp 🌡️')
 
   # First longwave RTM for initializing temperatures
   micro_grid <- data.frame(
@@ -119,8 +113,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
   # ITERATION TO CLOSE THE ENERGY BALANCE #
   #########################################
 
-  #print('E bal ⚖️')
-
   # Start iteration
   max_iter = 1000
   W = 1  # Weighting step, start value
@@ -134,14 +126,10 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
 
   for (iter in 1:max_iter) {
 
-    #print(paste0('-> Iteration ', iter))
-
-
     #################
     # NET RADIATION #
     #################
 
-    #print('   LW RTM ⛅ ')
     final_results_lw_2D = longwave_two_stream_RTM(voxel_grid, micro_grid, lw_two_stream,
                                                   F_sky_lw, omega_g_lw_v, omega_g_lw_h, macro_temp,
                                                   Kd_lw_v, Kd_lw_h, omega_lw, beta_lw) # A lot of these parameters are global parameters and actually do not need to be stated as arguments.
@@ -160,8 +148,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
     # Ground flux #
     ###############
 
-    #print('   G 🟫')
-
     # G is positive if E is entering the soil
     G = calculate_G(net_rad_ground)
     micro_grid$T_soil = G*stable_soil_depth/k_soil + T_soil_deep # micro_grid$T_soil_deep
@@ -175,7 +161,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
     # AIR TO AIR HEAT DIFFUSION #
     #############################
 
-    #print('   D 💨')
     dt = 1 # diffusion step is 1, ie, the iteration step taken for temp convergence
     T_air_vec = T_air_vec - calculate_D(T_air_vec,micro_grid$T_ground)*dt/(Cp*V*rho)
 
@@ -184,7 +169,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
     # SENSIBLE HEAT FLUX #
     ######################
 
-    #print('   H ♨️')
     sensible_flux = calculate_H(micro_grid$temperature,T_air_vec)
 
 
@@ -192,7 +176,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
     # LATENT HEAT FLUX #
     ####################
 
-    #print('   LE 💧')
     latent_flux <- calculate_LE(micro_grid$temperature-273.15,net_radiation) # temp in calculate_LE must be in °C
 
 
@@ -201,7 +184,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
     ##################
 
     energy_balance_surf <- net_radiation - sensible_flux - latent_flux
-    #print(paste0('   Max E_bal error = ', round(max(abs(energy_balance_surf)), 2)))
     error_current = max(abs(energy_balance_surf))
 
     # ---- Optional trace logging for selected voxels ----
@@ -225,11 +207,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
       W = max(W * 0.8, W_min)  # Reduce W by 20%, but never smaller than W_min
     }
     error_prev = error_current  # Update previous error
-
-    # print(summary(net_radiation))
-    # print(summary(sensible_flux))
-    # print(summary(latent_flux))
-    # print(summary(G))
 
     # Check convergence
     if (max(abs(energy_balance_surf)) < energy_balance_tolerance){
@@ -279,19 +256,6 @@ run_foredgeclim <- function(structure_grid, datetime, trace_idx = NULL) {
     newton_trace = trace_df
   )
 
-  # Results
-  # cat("Final surface temperature distribution (°C):\n")
-  # print(summary(micro_grid$temperature - 273.15))
-  # cat("Final air temperature distribution (°C):\n")
-  # print(summary(T_air_vec- 273.15))
-  # cat("Final soil temperature distribution (°C):\n")
-  # print(summary(micro_grid$T_soil- 273.15))
-
-
-  #finish = Sys.time()
-  #print(paste0('Run time = ', round(as.numeric(finish - start, units = "secs"), 2), ' s'))
-  #print('════════════════════════')
-  #print('🏁 𝙁𝙤𝙧𝙀𝙙𝙜𝙚𝘾𝙡𝙞𝙢')
 
   return(res)
 

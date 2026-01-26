@@ -52,7 +52,7 @@ plots_sw <- function(sw_rad_2D, output_path){
       xmin = 0, xmax = 140,
       ymin = 0, ymax = 40
     ) +
-    scale_fill_viridis_c(option = "inferno", limits = c(0, 700), breaks = c(0, 50, 100, 250, 600),
+    scale_fill_viridis_c(option = "inferno", limits = c(0, 350), breaks = c(5, 20, 50, 100, 200, 300),
                          trans = scales::pseudo_log_trans(sigma = 5), oob = scales::squish,
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(b) Shortwave diffuse downward radiation"),
@@ -92,7 +92,7 @@ plots_sw <- function(sw_rad_2D, output_path){
              label = "towards forest core", size = 5) +
     annotate("text", x = 120, y = 40,
              label = "towards forest edge", size = 5) +
-    scale_fill_viridis_c(option = "inferno",limits = c(0, 700), breaks = c(0, 50, 100, 250, 600),
+    scale_fill_viridis_c(option = "inferno", limits = c(0, 350), breaks = c(5, 20, 50, 100, 200, 300),
                          trans = scales::pseudo_log_trans(sigma = 5), oob = scales::squish,
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(c) Shortwave diffuse upward radiation"),
@@ -124,7 +124,7 @@ plots_sw <- function(sw_rad_2D, output_path){
       xmin = 0, xmax = 140,
       ymin = 0, ymax = 40
     ) +
-    scale_fill_viridis_c(option = "inferno", limits = c(0, 700), breaks = c(0, 50, 100, 250, 600),
+    scale_fill_viridis_c(option = "inferno", limits = c(0, 350), breaks = c(5, 20, 50, 100, 200, 300),
                          trans = scales::pseudo_log_trans(sigma = 5), oob = scales::squish,
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(a) Shortwave direct-beam radiation"),
@@ -188,7 +188,7 @@ plots_sw <- function(sw_rad_2D, output_path){
     ) +
     scale_fill_viridis_c(
       option = "inferno",
-      limits = c(0, 900),
+      limits = c(0, 650),
       oob = scales::squish,
       guide = guide_colorbar(
         barwidth = 1,
@@ -223,7 +223,7 @@ plots_sw <- function(sw_rad_2D, output_path){
     geom_tile()+
     scale_fill_viridis_c(
       option = "inferno",
-      limits = c(0, 900),
+      limits = c(0, 650),
       oob = scales::squish,
       guide = guide_colorbar(
         barwidth = 1,

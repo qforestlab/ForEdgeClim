@@ -50,7 +50,7 @@ plots_lw <- function(lw_rad_2D, output_path){
              label = "towards forest core", size = 5) +
     annotate("text", x = 120, y = 40,
              label = "towards forest edge", size = 5) +
-    scale_fill_viridis_c(option = "inferno",  limits = c(300, 850), breaks = c(400, 600, 800),
+    scale_fill_viridis_c(option = "inferno", limits = c(150, 450), breaks = c(200, 300, 400),
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(a) Longwave downward radiation"),
          x = "\n", y = "Height (m)\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) ) +#,
@@ -84,7 +84,7 @@ plots_lw <- function(lw_rad_2D, output_path){
       xmin = 0, xmax = 140,
       ymin = 0, ymax = 40
     ) +
-    scale_fill_viridis_c(option = "inferno", limits = c(300, 850), breaks = c(400, 600, 800),
+    scale_fill_viridis_c(option = "inferno", limits = c(150, 450), breaks = c(200, 300, 400),
                          guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(b) Longwave upward radiation"),
          x = "\nDistance from forest edge (m)", y = "\n", fill = bquote("Flux"~(W~m^{-2})*"      " ) )+ #,

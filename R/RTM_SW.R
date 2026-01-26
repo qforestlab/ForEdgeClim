@@ -275,10 +275,10 @@ shortwave_two_stream_RTM <- function(datetime, lat, lon, voxel_grid,
 
   # Sum fluxes
   final_results_2D[, `:=`(
-    F_d_down = F_d_down_h + F_d_down_v,
-    F_d_up = F_d_up_h + F_d_up_v,
-    F_b_down = F_b_down_h + F_b_down_v,
-    net_sw = net_sw_h + net_sw_v
+    F_d_down = (F_d_down_h + F_d_down_v) / 2, # division by 2 because each voxel only sees 1 hemisphere of incoming radiation
+    F_d_up = (F_d_up_h + F_d_up_v) /2,
+    F_b_down = F_b_down_h + F_b_down_v, # no need to devide because direct-beam radiation is subdivided according to the solar position
+    net_sw = net_sw_h + net_sw_v # no need to devide because voxels do absorb radiation from both sides
   )]
 
   # Select relevant columns

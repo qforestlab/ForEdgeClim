@@ -54,7 +54,7 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
   )
 
   # Colors to be used in the plots
-  colors = c("blue", "lightblue", "orange", "red")
+  colors = colorRampPalette(c("blue", "lightblue", "orange", "red"))(100)
 
   # background image
   img  <- png::readPNG("Output/horizontal_transect_2.png")
@@ -79,7 +79,6 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     scale_fill_gradientn(
       colors = colors,
       values = rescale(c(0.25, 0.5, 0.75, 1)),
-      #limits = c(26, 44),
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(c) Forest surface temperature"),
          x = "\nDistance from forest core (m)", y = "\n", fill = "Temperature (°C)")+#,
@@ -153,7 +152,6 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     scale_fill_gradientn(
       colors = colors,
       values = rescale(c(0.25, 0.5, 0.75, 1)),
-      #limits = c(26, 44),
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = paste("(b) Air temperature"),
          y = "Height (m)\n ", x = "\n", fill = "Temperature (°C)")+#,
@@ -187,8 +185,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     ) +
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      limits = c(26, 34),
+      values = rescale(c(0, 0.2, 0.4, 1)),
+      limits = c(27.5, 47),
+      trans = scales::pseudo_log_trans(sigma = 0.01),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,
@@ -219,8 +218,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     geom_tile()+
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      limits = c(26, 34),
+      values = rescale(c(0, 0.2, 0.4, 1)),
+      limits = c(27.5, 47),
+      trans = scales::pseudo_log_trans(sigma = 0.01),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,
@@ -251,8 +251,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     ) +
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      limits = c(25, 47),
+      values = rescale(c(0, 0.2, 0.4, 1)),
+      limits = c(27.5, 47),
+      trans = scales::pseudo_log_trans(sigma = 0.01),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,
@@ -283,8 +284,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     geom_tile()+
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0.25, 0.5, 0.75, 1)),
-      limits = c(25, 47),
+      values = rescale(c(0, 0.2, 0.4, 1)),
+      limits = c(27.5, 47),
+      trans = scales::pseudo_log_trans(sigma = 0.01),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,

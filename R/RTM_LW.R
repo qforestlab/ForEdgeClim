@@ -18,9 +18,10 @@ lw_two_stream <- function(soil_reflect, density, F_sky_lw, temperature, T_soil, 
 
   # Calculate black body emission at the temperature of the layer.
   # Black body emission of atmosphere is defined to be 0 because F_sky_lw has already been defined as above canopy input.
-  # Black body emission is per surface unit, so a density correction must be applied.
-  # Like this, zero-density values with no structure or surface don't produce BB emission (as e.g. the atmosphere).
-  black = c(density*e_forest*sigma_SB * temperature^4,0)
+  black = c(e_forest*sigma_SB * temperature^4,0)
+  # Black body emission of the soil
+  # Emissivity of soil = absorption of soil for lw radiation => emissivity = 1 - omega_g
+  black_g = (1-omega_g)*sigma_SB*T_soil^4
 
   # Number of (cohort) layers
   n <- length(density)
@@ -34,10 +35,6 @@ lw_two_stream <- function(soil_reflect, density, F_sky_lw, temperature, T_soil, 
   S <- matrix(0, nrow = 2 * n + 2, ncol = 2 * n + 2)
   y <- numeric(2 * n + 2)
 
-  # Black body emission of the soil
-  # Emissivity of soil = absorption of soil for lw radiation => emissivity = 1 - omega_g
-  black_g = (1-omega_g)*sigma_SB*T_soil^4
-
   # Auxiliary variables
   # Gamma
   gamma_plus <- rep(0.5 * (1 + sqrt((1 - omega) / (1 - (1 - 2 * beta) * omega))) , n)
@@ -50,8 +47,8 @@ lw_two_stream <- function(soil_reflect, density, F_sky_lw, temperature, T_soil, 
   # no Kappa and Delta as in shortwave RTM
 
   # Boundary conditions
-  y[2*n+2] <- F_sky_diff - black[n+1] # Incoming longwave radiation at top canopy
-  y[1] <- (1 - omega_g) * black_g - (1 - omega_g)*black[1]
+  y[2*n+2] <- F_sky_diff - black[n+1] # Downward (incoming) longwave radiation at top canopy.
+  y[1] <- black_g - (1 - omega_g)*black[1] # Upward (outgoing) longwave radiation from the ground surface.
 
   S[2 * n + 2, 2 * n + 1] <- gamma_plus[n+1]
   S[2 * n + 2, 2 * n + 2] <- gamma_minus[n+1]
@@ -234,9 +231,9 @@ longwave_two_stream_RTM <- function(voxel_grid, micro_grid, lw_two_stream,
 
   # Sum fluxes
   final_results_lw_2D[, `:=`(
-    F_d_down = F_d_down_h + F_d_down_v,
-    F_d_up = F_d_up_h + F_d_up_v,
-    net_lw = net_lw_h + net_lw_v
+    F_d_down = (F_d_down_h + F_d_down_v) / 2, # division by 2 because each voxel only sees 1 hemisphere of incoming radiation
+    F_d_up = (F_d_up_h + F_d_up_v) / 2,
+    net_lw = net_lw_h + net_lw_v # no need to devide because voxels do absorb radiation from both sides
   )]
 
   # Select relevant columns
