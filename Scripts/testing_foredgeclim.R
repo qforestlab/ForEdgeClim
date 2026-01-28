@@ -16,8 +16,8 @@ start_script = Sys.time()
 # INPUT #
 #########
 
-start_time <- as.POSIXct("2023-07-08 14:00:00", tz = "UTC") # first hour you want to run the model for
-end_time <- as.POSIXct("2023-07-08 14:00:00", tz = "UTC")   # last hour you want to run the model for
+start_time <- as.POSIXct("2023-07-08 12:00:00", tz = "UTC") # first hour you want to run the model for
+end_time <- as.POSIXct("2023-07-08 12:00:00", tz = "UTC")   # last hour you want to run the model for
 datetime_series <- seq(start_time, end_time, by = "hour")   # ForEdgeClim is run for all the hours between the first and last hour
 TLS_input_file <- 'Data/2023-07-10_ForSe_Gontrode_5cm_transect_emma.las' # original TLS las file
 TLS_filtered_file <- 'Data/TLS_scaled_DTM_and_grid_July2023.rds' # Once the structural voxel grid has been made using the
@@ -78,20 +78,20 @@ for (current_datetime in datetime_series) {
   # PLOTTING #
   ############
 
-  # Digital Terrain Model & structural grid plots
-  plots_dtm_struct(dtm = voxel_TLS$dtm, grid = voxel_TLS$grid, output_path)
-
-  # Shortwave radiation plots
-  plots_sw(sw_rad_2D = res$sw_rad_2D, output_path)
-
-  # Longwave radiation plots
-  plots_lw(lw_rad_2D = res$lw_rad_2D, output_path)
-
-  # Flux plots
-  plots_flux(res$micro_grid, res$net_radiation, res$sensible_flux, res$latent_flux, res$ground_flux, output_path, current_datetime)
-
-  # Temperature plots
-  plots_temp(res$micro_grid, res$air_temperature, output_path, current_datetime)
+  # # Digital Terrain Model & structural grid plots
+  # plots_dtm_struct(dtm = voxel_TLS$dtm, grid = voxel_TLS$grid, output_path)
+  #
+  # # Shortwave radiation plots
+  # plots_sw(sw_rad_2D = res$sw_rad_2D, output_path)
+  #
+  # # Longwave radiation plots
+  # plots_lw(lw_rad_2D = res$lw_rad_2D, output_path)
+  #
+  # # Flux plots
+  # plots_flux(res$micro_grid, res$net_radiation, res$sensible_flux, res$latent_flux, res$ground_flux, output_path, current_datetime)
+  #
+  # # Temperature plots
+  # plots_temp(res$micro_grid, res$air_temperature, output_path, current_datetime)
 
 }
 end_script = Sys.time()

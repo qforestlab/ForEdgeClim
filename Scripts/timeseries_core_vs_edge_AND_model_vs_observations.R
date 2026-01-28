@@ -57,7 +57,8 @@ model_core_df <- bind_rows(
     Tair <- res_list[[i]]$air_temperature
     df %>%
       mutate(Tair = Tair) %>%
-      filter(z == req_height, y == 18, x <= min(x)) %>%
+      # central y-line = 18m; x-value core sensor at min(x)+4
+      filter(z == req_height, y <= 18+7.5, y >= 18-7.5, x <= min(x)+4+7.5) %>%
       transmute(
         x           = x,
         temperature = Tair - 273.15,
@@ -76,7 +77,8 @@ model_edge_df <- bind_rows(
     Tair <- res_list[[i]]$air_temperature
     df %>%
       mutate(Tair = Tair) %>%
-      filter(z == req_height, y == 18, x == length_transect) %>%
+      # central y-line = 18m; x-value edge sensor at length_transect-2
+      filter(z == req_height, y <= 18+7.5, y >= 18-7.5, x >= length_transect-2-7.5) %>%
       transmute(
         x           = x,
         temperature = Tair - 273.15,

@@ -233,7 +233,7 @@ longwave_two_stream_RTM <- function(voxel_grid, micro_grid, lw_two_stream,
   final_results_lw_2D[, `:=`(
     F_d_down = (F_d_down_h + F_d_down_v) / 2, # division by 2 because each voxel only sees 1 hemisphere of incoming radiation
     F_d_up = (F_d_up_h + F_d_up_v) / 2,
-    net_lw = net_lw_h + net_lw_v # no need to devide because voxels do absorb radiation from both sides
+    net_lw = net_lw_h + net_lw_v # no need to divide because voxels do absorb radiation from both sides
   )]
 
   # Select relevant columns

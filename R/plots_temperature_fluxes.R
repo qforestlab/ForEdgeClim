@@ -185,9 +185,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     ) +
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0, 0.2, 0.4, 1)),
-      limits = c(27.5, 47),
-      trans = scales::pseudo_log_trans(sigma = 0.01),
+      values = scales::rescale(c(22, 26, 28, 29, 29.5, 30, 30.5, 31, 32, 34, 38, 41)),
+      limits = c(22, 41),
+      #trans = scales::pseudo_log_trans(sigma = 5),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,
@@ -218,9 +218,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     geom_tile()+
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0, 0.2, 0.4, 1)),
-      limits = c(27.5, 47),
-      trans = scales::pseudo_log_trans(sigma = 0.01),
+      values = scales::rescale(c(22, 26, 28, 29, 29.5, 30, 30.5, 31, 32, 34, 38, 41)),
+      limits = c(22, 41),
+      #trans = scales::pseudo_log_trans(sigma = 5),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,
@@ -251,9 +251,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     ) +
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0, 0.2, 0.4, 1)),
-      limits = c(27.5, 47),
-      trans = scales::pseudo_log_trans(sigma = 0.01),
+      values = scales::rescale(c(22, 26, 28, 29, 29.5, 30, 30.5, 31, 32, 34, 38, 41)),
+      limits = c(22, 41),
+      #trans = scales::pseudo_log_trans(sigma = 5),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,
@@ -284,9 +284,9 @@ plots_temp <- function(micro_grid, T_air_vec, output_path, datetime){
     geom_tile()+
     scale_fill_gradientn(
       colors = colors,
-      values = rescale(c(0, 0.2, 0.4, 1)),
-      limits = c(27.5, 47),
-      trans = scales::pseudo_log_trans(sigma = 0.01),
+      values = scales::rescale(c(22, 26, 28, 29, 29.5, 30, 30.5, 31, 32, 34, 38, 41)),
+      limits = c(22, 41),
+      #trans = scales::pseudo_log_trans(sigma = 5),
       oob = scales::squish,
       guide = guide_colorbar(barwidth = 1, barheight = 10, frame.colour = "black", ticks.colour = "black")) +
     labs(title = NULL,

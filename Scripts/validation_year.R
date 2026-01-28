@@ -227,9 +227,11 @@ saveRDS(val_data, out_file)
 
 # calculate statistics
 mean_error <- mean(val_data$resid, na.rm = TRUE)
+sd_resid   <- sd(val_data$resid, na.rm = TRUE)
 rmse       <- sqrt(mean(val_data$resid^2, na.rm = TRUE))
 r2         <- cor(val_data$obs, val_data$mod)^2
 nse        <- 1 - sum(val_data$resid^2) / sum((val_data$obs - mean(val_data$obs))^2)
+
 
 
 plan(sequential)
@@ -237,9 +239,11 @@ plan(sequential)
 # Console summaries
 cat("\nValidation statistics:\n")
 cat(sprintf("Mean Error (Bias): %.2f °C\n", mean_error))
+cat(sprintf("SD(residuals): %.2f °C\n", sd_resid))
 cat(sprintf("RMSE: %.2f °C\n", rmse))
 cat(sprintf("R²: %.2f\n", r2))
 cat(sprintf("NSE: %.2f\n", nse))
+
 
 
 

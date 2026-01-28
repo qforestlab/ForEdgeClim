@@ -2,7 +2,7 @@
 
 ForEdgeClim is an R package for modelling microclimates in forests, including radiation processes and heat transfer.
 The model is initially written to simulate microclimate gradients along transect lines from a forest’s core towards its edge.
-This repository contains the code used in the manuscript 'Simulating forest edge-to-core microclimate with ForEdgeClim v1.0: a process-based model incorporating vertical and lateral energy fluxes' and a more detailed overview with the applied physical equations can be found therein (DOI:).
+This repository contains the code used in the manuscript 'ForEdgeClim v1.0: a 3D process-based microclimate model incorporating vertical and lateral energy fluxes to simulate forest edge-to-core transitions' and a more detailed overview with the applied physical equations can be found therein (DOI:). The ForEdgeClim code used to produce the manuscript is hosted on the Q-ForestLab GitHub page (https://github.com/qforestlab/ForEdgeClim) and the development repository of ForEdgeClim can be found on the personal GitHub page of model developer Emma Van de Walle: https://github.com/EmmaVdW27/ForEdgeClim.
 
 ## Installation
 Install the package directly from GitHub:
@@ -76,7 +76,6 @@ for (current_datetime in datetime_series) {
   # CREATION OF 3D GRID #
   #######################
 
-  #print('3D grid 🌲🌳🌲🌳🌲')
   # Structure from TLS las file
   voxel_TLS = generate_DTM_grid_TLS(las_file = TLS_input_file, voxel_size = voxel_length)
   saveRDS(voxel_TLS, TLS_filtered_file)

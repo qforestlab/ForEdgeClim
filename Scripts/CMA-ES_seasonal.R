@@ -105,14 +105,14 @@ if (param_set == "all") {
   # Fixed parameters (LW RTM)
   e_forest <<- 0.965; beta_lw <<- 0.325; omega_lw <<- 0.035; Kd_lw_v <<- 0.3; omega_g_lw_v <<- 0.055; Kd_lw_h <<- 0.3; omega_g_lw_h <<- 0.035
 } else { # top_3
-  param_names <- c("g_macro", "infl_macro", "infl_soil")
+  param_names <- c("k_soil", "infl_macro", "infl_soil")
   # Fixed parameters (SW RTM)
   betad <<- 0.325; beta0 <<- 0.325; omega <<- 0.52; Kd_v <<- 0.775; Kb_v <<- 1.25; omega_g_v <<- 0.13;
   Kd_h <<- 0.725; Kb_h <<- 1.15; omega_g_h <<- 0.15
   # Fixed parameters (LW RTM)
   e_forest <<- 0.965; beta_lw <<- 0.325; omega_lw <<- 0.035; Kd_lw_v <<- 0.3; omega_g_lw_v <<- 0.055; Kd_lw_h <<- 0.3; omega_g_lw_h <<- 0.035
   # Fixed parameters (HEAT)
-  h <<- 10; infl_soil <<- 5; infl_forest <<- 5; g_forest <<- 12.5; p_ground <<- 0.225; g_soil <<- 10; k_soil <<- 1.225
+  h <<- 10; infl_soil <<- 5; infl_forest <<- 5; g_forest <<- 12.5; p_ground <<- 0.225; g_soil <<- 10; g_macro <<- 25
 }
 
 # Initial values (mean value from uniform parameter distributions)
@@ -123,7 +123,7 @@ if (param_set == "all") {
 } else if (param_set == "focused") {
   start_vals <- c(10,25,32.5,5,5,12.5,0.225,10,1.225)
 } else { # top_3
-  start_vals <- c(25,32.5,5)
+  start_vals <- c(1.225,32.5,5)
 }
 
 # Bounds
@@ -134,8 +134,8 @@ if (param_set == "all") {
   lower_bounds <- c(0,10,5,0,0,5,0.1,5,0.25)
   upper_bounds <- c(20,40,60,10,10,20,0.35,15,2.2)
 } else { # top_3
-  lower_bounds <- c(10,5,0)
-  upper_bounds <- c(40,60,10)
+  lower_bounds <- c(0.25,5,0)
+  upper_bounds <- c(2.2,60,10)
 }
 
 # -----------------
@@ -162,11 +162,11 @@ set_params_from_vec <- function(par) {
     h <<- par[1]; g_macro <<- par[2]; infl_macro <<- par[3]; infl_soil <<- par[4]; infl_forest <<- par[5]; g_forest <<- par[6]
     p_ground <<- par[7]; g_soil <<- par[8]; k_soil <<- par[9]
   } else { # top_3
-    g_macro <<- par[1]; infl_macro <<- par[2]; infl_soil <<- par[3]
+    k_soil <<- par[1]; infl_macro <<- par[2]; infl_soil <<- par[3]
   }
 }
 
-# evaluator that does everything (RMSE, R2, ME and NSE)
+# evaluator that does everything (RMSE, R2, ME and NSE and SD)
 evaluate_par <- function(par) {
 
   parts <- future_lapply(
@@ -245,7 +245,9 @@ evaluate_par <- function(par) {
           sum_obs     = sum(obs),
           sum_sim2    = sum(sim^2),
           sum_obs2    = sum(obs^2),
-          sum_sim_obs = sum(sim * obs)
+          sum_sim_obs = sum(sim * obs),
+          sum_diff    = sum(diffs[valid]),
+          sum_diff2   = sum(diffs[valid]^2)
         )
 
       }, error = function(e) {
@@ -255,7 +257,9 @@ evaluate_par <- function(par) {
           sse = NA_real_, n = 0L,
           sum_sim = 0, sum_obs = 0,
           sum_sim2 = 0, sum_obs2 = 0,
-          sum_sim_obs = 0
+          sum_sim_obs = 0,
+          sum_diff = 0,
+          sum_diff2 = 0
         )
       })
     },
@@ -270,6 +274,8 @@ evaluate_par <- function(par) {
   sum_sim2_total    <- sum(vapply(parts, `[[`, numeric(1), "sum_sim2"),    na.rm = TRUE)
   sum_obs2_total    <- sum(vapply(parts, `[[`, numeric(1), "sum_obs2"),    na.rm = TRUE)
   sum_sim_obs_total <- sum(vapply(parts, `[[`, numeric(1), "sum_sim_obs"), na.rm = TRUE)
+  sum_diff_total  <- sum(vapply(parts, `[[`, numeric(1), "sum_diff"),  na.rm = TRUE)
+  sum_diff2_total <- sum(vapply(parts, `[[`, numeric(1), "sum_diff2"), na.rm = TRUE)
   n_failed          <- sum(!vapply(parts, `[[`, logical(1), "ok"))
 
   if (n_total == 0) {
@@ -297,9 +303,17 @@ evaluate_par <- function(par) {
 
   me <- (sum_sim_total - sum_obs_total) / n_total
 
+  # SD of residuals (sample SD)
+  sd_res <- if (n_total > 1) {
+    sqrt((sum_diff2_total - (sum_diff_total^2) / n_total) / (n_total - 1))
+  } else {
+    NA_real_
+  }
+
+
   list(
     RMSE = rmse,
-    metrics = list(RMSE = rmse, R2 = r2, NSE = nse, ME = me),
+    metrics = list(RMSE = rmse, R2 = r2, NSE = nse, ME = me, SD = sd_res),
     n_total = n_total,
     n_failed = n_failed
   )

@@ -26,9 +26,9 @@ output_path_plots <- "Output/sensitivity_analysis/Sobol_QoI/plots_output/"
 output_path_numbers <- "Output/sensitivity_analysis/Sobol_QoI/numbers_output/"
 
 
-output_plot_focused_parameters_by_condition_normalized <- "Sobol_indices_forest_surfaceT_vertical.png"
+output_plot_focused_parameters_by_condition_normalized <- "Sobol_indices_forest_surfaceT_horizontal.png"
 
-direction = 'v' # or 'h'
+direction = 'h' # v or h
 
 # File list with labels
 files_info <- tribble(
@@ -99,9 +99,9 @@ param_order <- c(
   "h", "g_macro", "infl_macro", "infl_soil", "infl_forest", "g_forest", "p_ground", "g_soil", "k_soil"
 )
 # Focused parameter sequence in order from most influenteal to least influential (to be plot in this order)
-focus_params <- c("infl_macro", "infl_soil", "g_macro",
-                  "k_soil", "infl_forest", "g_soil",
-                  "h", "p_ground", "g_forest")
+focus_params <- c("infl_macro", "infl_soil", "k_soil",
+                  "g_soil", "g_macro", "p_ground",
+                  "infl_forest", "h", "g_forest")
 # Shortwave parameter sequence
 SW_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
 # Longwave parameter sequence
@@ -131,8 +131,8 @@ all_colors <- c(
 labels_expr <- c(
   infl_macro  = expression(italic(i)[m]),
   infl_soil   = expression(italic(i)[s]),
-  g_macro     = expression(italic(g)[m]),
   k_soil      = expression(italic(k)[s]),
+  g_macro     = expression(italic(g)[m]),
   infl_forest = expression(italic(i)[f]),
   g_soil      = expression(italic(g)[s]),
   h           = expression(italic(h)),
@@ -351,16 +351,16 @@ avg_param_by_season  <- sobol_df %>% filter(!is.na(season)) %>%
   summarise(mean_index = mean(norm_value), sd_index = sd(norm_value), .groups = "drop")
 
 # get ranges on the contributions for top 4 parameters across conditions
-#target_params <- c("infl_macro", "infl_soil", "g_forest", "g_macro")
+#target_params <- c("infl_macro", "g_forest")
 # top 1 parameter
-target_params <- c("g_forest")
+#target_params <- c("g_forest")
 # # SW parameters:
-#target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h")
-# # LW parameters:
+#target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h","infl_macro", "g_forest")
+# LW parameters:
 #target_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 # rad params
-# target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h",
-#                    "e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
+target_params <- c("betad", "beta0", "omega", "Kd_v", "Kb_v", "omega_g_v", "Kd_h", "Kb_h", "omega_g_h",
+                   "e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd_lw_h", "omega_g_lw_h")
 
 range_metric <- avg_param_by_metric %>%
   filter(parameter %in% target_params) %>%

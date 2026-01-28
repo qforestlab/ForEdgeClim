@@ -70,6 +70,7 @@ stats_df <- val_data_all %>%
   summarise(
     ME   = mean(resid, na.rm = TRUE), # mean error (bias)
     RMSE = sqrt(mean(resid^2, na.rm = TRUE)), # root mean square error (spread)
+    SD = sd(resid, na.rm = TRUE),
     R2   = cor(obs, mod, use = "complete.obs")^2, # R2 (model fit)
     NSE  = 1 - sum(resid^2, na.rm = TRUE) / # Nash–Sutcliffe model efficiency coefficient (overall performance)
       sum((obs - mean(obs, na.rm = TRUE))^2, na.rm = TRUE),
@@ -81,7 +82,7 @@ lab_df <- stats_df %>%
   transmute(
     model,
     lab_scatter = sprintf("R\u00B2 = %.2f\nNSE = %.2f", R2, NSE),
-    lab_resid   = sprintf("RMSE = %.2f \u00B0C\nME = %.2f \u00B0C", RMSE, ME)
+    lab_resid   = sprintf("RMSE = %.2f \u00B0C\nME = %.2f \u00B0C\nSD = %.2f \u00B0C", RMSE, ME, SD)
   )
 
 # -----------------
@@ -343,6 +344,7 @@ stats_df %>%
   mutate(
     ME   = sprintf("%.2f °C", ME),
     RMSE = sprintf("%.2f °C", RMSE),
+    SD   = sprintf("%.2f °C", SD),
     R2   = sprintf("%.2f",   R2),
     NSE  = sprintf("%.2f",   NSE)
   ) %>%
@@ -350,6 +352,7 @@ stats_df %>%
     `Model` = model,
     `ME (bias)` = ME,
     `RMSE (spread)` = RMSE,
+    `SD (spread)` = SD,
     `R2 (model fit)` = R2,
     `NSE (overall performance)` = NSE
   ) %>%
