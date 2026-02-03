@@ -89,9 +89,9 @@ create_model_parameters <- function() {
   h <<- 10                # Convection coefficient of air (W/m2/K), higher value means more wind/more turbulence
 
   # parameters for update linearization air temperature
-  g_macro <<- 25 # 9.93 #    # Convective heat transfer coefficient between (voxel) air and (macro) air (W/m2/K)
-  infl_macro <<- 32.5 # 58.16 #   # Distance over which the influence of macro temp on air temp is reduced by 50% (m)
-  infl_soil <<- 5 # 9.72 # # Distance over which the influence of soil temp on air temp is reduced by 50% (m)
+  g_macro <<- 25          # Convective heat transfer coefficient between (voxel) air and (macro) air (W/m2/K)
+  infl_macro <<- 32.5 # 57.92 # 57.65    # Distance over which the influence of macro temp on air temp is reduced by 50% (m)
+  infl_soil <<- 5 #  3.24   4.76 #   # Distance over which the influence of soil temp on air temp is reduced by 50% (m)
   infl_forest <<- 5       # Distance over which the influence of forest temp on air temp is reduced by 50% (m)
 
   # parameters for sensible heat flux (H)
@@ -100,7 +100,7 @@ create_model_parameters <- function() {
   # parameters for ground heat flux (G) and soil temperature
   p_ground <<- 0.225      # Fraction of net ground radiation to define ground flux
   g_soil <<- 10           # Convective heat transfer coefficient between (voxel) air of air layer just above the ground and ground surface (W/m2/K)
-  k_soil <<- 1.225        # Thermal conductance soil (W/m/K)
+  k_soil <<- 1.225       # 2.20 # 1.15   #  Thermal conductance soil (W/m/K)
 
 }
 

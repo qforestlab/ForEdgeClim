@@ -50,11 +50,6 @@ for (current_datetime in datetime_series) {
 
   # Import observations as input variables and as variables to compare the model with
   import_RMI_observations(current_datetime)
-  # In case you don't have longwave downward radiation values from the sky, you can use the
-  # macrotemperature as a proxy:
-  # if(is_empty(F_sky_lw)){
-  #   assign("F_sky_lw", sigma_SB * 0.75 * macro_temp^4, envir = .GlobalEnv)
-  # }
   import_pyr_observations(current_datetime)
   import_soil_temperature(current_datetime)
 
@@ -95,4 +90,4 @@ for (current_datetime in datetime_series) {
 
 }
 end_script = Sys.time()
-print(paste0('Total run time = ', round(as.numeric(end_script - start_script, units = "secs"), 2), ' s'))
+print(paste0('Total running time = ', round(as.numeric(end_script - start_script, units = "secs"), 2), ' s'))

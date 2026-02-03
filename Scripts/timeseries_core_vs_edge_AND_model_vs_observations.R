@@ -4,6 +4,9 @@
 # points on July 8 2023. For both model and observations, we compare edge vs
 # core positions within the forest transect.
 #
+#
+# Author: Emma Van de Walle - Q-ForestLab
+#
 ###############################################################################
 
 

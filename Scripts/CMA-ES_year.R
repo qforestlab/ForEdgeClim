@@ -411,7 +411,7 @@ compute_rmse <- function(par) {
 
 
 # -----------------
-# EXTRA METRICS: RMSE, R2, NSE, ME
+# EXTRA METRICS: RMSE, R2, NSE, ME, SD
 # -----------------
 compute_metrics <- function(par) {
   evaluate_par(par)$metrics

@@ -1,3 +1,11 @@
+############################################################################################
+# This script visualizes the macroclimatic input drivers (macrotemperature and
+# shortwave radiative values) used for the calibration process of ForEdgeClim.
+#
+# Author: Emma Van de Walle - Q-ForestLab
+############################################################################################
+
+
 # ---- Packages ----
 library(tidyverse)
 library(lubridate)
@@ -213,7 +221,7 @@ p <- ggplot(
     y = NULL,
     colour = "Day type",
     title = paste0(
-      "Mean hourly drivers for selected days during the ",
+      "Mean hourly drivers for selected calibration days during the ",
       season, " season"
     )
   ) +
@@ -221,7 +229,7 @@ p <- ggplot(
   theme_bw() +
   theme(
     panel.grid.minor = element_blank(),
-    plot.title = element_text(size = 15),
+    plot.title = element_blank(), #element_text(size = 15),
     strip.text = element_text(size = 15),
     strip.text.x = element_text(size = 15, hjust = 0),
     axis.title = element_text(size = 15),
@@ -248,7 +256,7 @@ p <- ggplot(
     hjust = 0, vjust = 1,
     label.size = 0.4,
     label.r = unit(0.35, "lines"),
-    label.padding = unit(0.35, "lines"),  # kleine extra hoogte/breedte rondom
+    label.padding = unit(0.35, "lines"),
     fill = "white", colour = "black",
     size = 3.2
   ) +

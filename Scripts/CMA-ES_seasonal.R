@@ -75,7 +75,7 @@ names(structures_scaled) <- names(structures)
 
 param_set <- "top_3"   # "all" | "focused" | "top_3"
 
-max_it        <- 39     # generations (there will be max_it + 1 generations)
+max_it        <- 50     # generations (there will be max_it + 1 generations)
 stop_fitness  <- 1      # RMSE target (°C)
 lambda        <- NULL   # if NULL we set a heuristic later
 
@@ -328,7 +328,7 @@ compute_rmse <- function(par) {
 
 
 # -----------------
-# EXTRA METRICS: RMSE, R2, NSE, ME
+# EXTRA METRICS: RMSE, R2, NSE, ME, SD
 # -----------------
 compute_metrics <- function(par) {
   evaluate_par(par)$metrics

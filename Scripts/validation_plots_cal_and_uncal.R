@@ -23,7 +23,7 @@ suppressPackageStartupMessages({
 # -----------------
 
 # Set the base season. The script will also look for "<base>_uncalibrated".
-base_season <- "winter"   # summer | spring | autumn | winter
+base_season <- "summer"   # summer | spring | autumn | winter | year
 
 # Build file map: names = model label, values = season-string used in filenames
 season_map <- c(
@@ -70,7 +70,7 @@ stats_df <- val_data_all %>%
   summarise(
     ME   = mean(resid, na.rm = TRUE), # mean error (bias)
     RMSE = sqrt(mean(resid^2, na.rm = TRUE)), # root mean square error (spread)
-    SD = sd(resid, na.rm = TRUE),
+    SD = sd(resid, na.rm = TRUE), # standard deviation of residuals (spread)
     R2   = cor(obs, mod, use = "complete.obs")^2, # R2 (model fit)
     NSE  = 1 - sum(resid^2, na.rm = TRUE) / # Nash–Sutcliffe model efficiency coefficient (overall performance)
       sum((obs - mean(obs, na.rm = TRUE))^2, na.rm = TRUE),

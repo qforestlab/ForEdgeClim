@@ -4,7 +4,7 @@ Data_to_ignore/
 Parameter_values_from_literature/
 fast_load.R
 Data/*
-!Data/model_result_files/
+!Data/model_TOMST_result_files/
 !Data/pyranometer_tower.dat
 !Data/RMI_Melle.csv
 !Data/RMI_radiation.csv

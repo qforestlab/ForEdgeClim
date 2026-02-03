@@ -2,7 +2,9 @@
 
 ForEdgeClim is an R package for modelling microclimates in forests, including radiation processes and heat transfer.
 The model is initially written to simulate microclimate gradients along transect lines from a forest’s core towards its edge.
-This repository contains the code used in the manuscript 'ForEdgeClim v1.0: a 3D process-based microclimate model incorporating vertical and lateral energy fluxes to simulate forest edge-to-core transitions' and a more detailed overview with the applied physical equations can be found therein (DOI:). The ForEdgeClim code used to produce the manuscript is hosted on the Q-ForestLab GitHub page (https://github.com/qforestlab/ForEdgeClim) and the development repository of ForEdgeClim can be found on the personal GitHub page of model developer Emma Van de Walle: https://github.com/EmmaVdW27/ForEdgeClim.
+This repository contains the code used in the manuscript 'ForEdgeClim v1.0: a 3D process-based microclimate model incorporating vertical and lateral energy fluxes to simulate forest edge-to-core transitions' and a more detailed overview with the applied physical equations can be found therein (submitted to Geoscientific Model Development). The ForEdgeClim code used to produce the manuscript is hosted on the Q-ForestLab GitHub page (https://github.com/qforestlab/ForEdgeClim) and the development repository of ForEdgeClim can be found on the personal GitHub page of model developer Emma Van de Walle (https://github.com/EmmaVdW27/ForEdgeClim).
+
+Installation
 
 ## Installation
 Install the package directly from GitHub:
@@ -64,11 +66,6 @@ for (current_datetime in datetime_series) {
 
   # Import observations as input variables and as variables to compare the model with
   import_RMI_observations(current_datetime)
-  # In case you don't have longwave downward radiation values from the sky, you can use the
-  # macrotemperature as a proxy:
-  # if(is_empty(F_sky_lw)){
-  #   assign("F_sky_lw", sigma_SB * 0.75 * macro_temp^4, envir = .GlobalEnv)
-  # }
   import_pyr_observations(current_datetime)
   import_soil_temperature(current_datetime)
 
@@ -109,11 +106,7 @@ for (current_datetime in datetime_series) {
 
 }
 end_timeseries = Sys.time()
-print(paste0('Total running time timeseries = ', round(as.numeric(end_timeseries - start_timeseries, units = "secs"), 2), ' s'))
-
-
-
-
+print(paste0('Total running time = ', round(as.numeric(end_timeseries - start_timeseries, units = "secs"), 2), ' s'))
 
 
 ```

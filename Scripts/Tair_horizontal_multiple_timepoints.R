@@ -3,6 +3,9 @@
 # In this script multiple timepoints between model and observations are plot along the
 # horizontal transect line.
 #
+#
+# Author: Emma Van de Walle - Q-ForestLab
+#
 ###############################################################################
 
 library(dplyr)

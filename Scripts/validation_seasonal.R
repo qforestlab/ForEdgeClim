@@ -30,8 +30,8 @@ start_analysis <- Sys.time()
 
 params = list(
   # Calibrated parameters (HEAT)
-  g_macro = 25.28, infl_macro = 32.5, infl_soil = 5,
-  # uncalibrated, fixed values: g_macro = 25, infl_macro = 32.5, infl_soil = 5,
+  k_soil = 1.225, infl_macro = 32.5, infl_soil = 5,
+  # uncalibrated, fixed values: k_soil = 1.225, infl_macro = 32.5, infl_soil = 5,
 
   # Fixed parameters (SW RTM)
   betad = 0.325, beta0 = 0.325, omega = 0.52, Kd_v = 0.775, Kb_v = 1.25, omega_g_v = 0.13,
@@ -39,7 +39,7 @@ params = list(
   # Fixed parameters (LW RTM)
   e_forest = 0.965, beta_lw = 0.325, omega_lw = 0.035, Kd_lw_v = 0.3, omega_g_lw_v = 0.055, Kd_lw_h = 0.3, omega_g_lw_h = 0.035,
   # Fixed parameters (HEAT)
-  h = 10, infl_forest = 5, g_forest = 12.5, p_ground = 0.225, g_soil = 10, k_soil = 1.225
+  h = 10, infl_forest = 5, g_forest = 12.5, p_ground = 0.225, g_soil = 10, g_macro = 25
 )
 # Dates for which you want to validate the model
 
@@ -183,7 +183,7 @@ plan(sequential)
 # Console summaries
 cat("\nValidation statistics:\n")
 cat(sprintf("Mean Error (Bias): %.2f °C\n", mean_error))
-cat(sprintf("SD(residuals): %.2f °C\n", sd_resid))
+cat(sprintf("SD (residuals): %.2f °C\n", sd_resid))
 cat(sprintf("RMSE: %.2f °C\n", rmse))
 cat(sprintf("R²: %.2f\n", r2))
 cat(sprintf("NSE: %.2f\n", nse))

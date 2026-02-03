@@ -2,9 +2,12 @@
 # In this script all 'Sobol_all_at_once.R' rds outputfiles for the several
 # seasons and time points are merged together to get an overview of the
 # Quantities of Interest (4 seasons x 3 time points x 3 metrics).
-# This script runs for the horizontal line, along the central Y-line at Z = 1 m height.
-# This script analyzes the forest surface temperature. Sobol_indices_airT_horizontal.R is similar,
+# This script runs for the horizontal or vertical line.
+# This script analyzes the forest surface temperature. Sobol_indices_airT.R is similar,
 # but for the air temperature.
+#
+# Author: Emma Van de Walle - Q-ForestLab
+#
 ###############################################################################
 
 
@@ -26,9 +29,9 @@ output_path_plots <- "Output/sensitivity_analysis/Sobol_QoI/plots_output/"
 output_path_numbers <- "Output/sensitivity_analysis/Sobol_QoI/numbers_output/"
 
 
-output_plot_focused_parameters_by_condition_normalized <- "Sobol_indices_forest_surfaceT_horizontal.png"
+output_plot_focused_parameters_by_condition_normalized <- "Sobol_indices_forest_surfaceT_vertical.png"
 
-direction = 'h' # v or h
+direction = 'v' # v or h
 
 # File list with labels
 files_info <- tribble(
@@ -110,14 +113,15 @@ LW_params <- c("e_forest", "beta_lw", "omega_lw", "Kd_lw_v", "omega_g_lw_v", "Kd
 focus_colors <- c(
   "#3B4CC0",  # deep blue
   "#5E7FDB",  # blue
-  "#F7C58A",  # light orange
   "#D62828",  # red
-  "#87AFDE",  # light blue
+  "#F7C58A",  # light orange
   "#F4A259",  # orange
   "#A4161A",  # dark red
+  "#87AFDE",  # light blue
   "#6A040F",  # very dark red
   "#E98B1E"   # deep orange
-  )
+)
+
 
 
 # Color palette

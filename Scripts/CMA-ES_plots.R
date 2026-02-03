@@ -18,7 +18,7 @@ start_analysis <- Sys.time()
 # -----------------
 # INPUT
 # -----------------
-season = "spring_50_" # winter spring summer autumn all_seasons
+season = "all_seasons_50_" # winter spring summer autumn all_seasons
 
 number_of_params = 3
 
