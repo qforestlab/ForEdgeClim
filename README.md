@@ -74,9 +74,9 @@ for (current_datetime in datetime_series) {
   #######################
 
   # Structure from TLS las file
-  voxel_TLS = generate_DTM_grid_TLS(las_file = TLS_input_file, voxel_size = voxel_length)
-  saveRDS(voxel_TLS, TLS_filtered_file)
-  #voxel_TLS = readRDS(TLS_filtered_file)
+  # voxel_TLS = generate_DTM_grid_TLS(las_file = TLS_input_file, voxel_size = voxel_length)
+  # saveRDS(voxel_TLS, TLS_filtered_file)
+  voxel_TLS = readRDS(TLS_filtered_file)
 
   #############
   # RUN MODEL #
