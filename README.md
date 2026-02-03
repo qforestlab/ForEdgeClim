@@ -4,8 +4,6 @@ ForEdgeClim is an R package for modelling microclimates in forests, including ra
 The model is initially written to simulate microclimate gradients along transect lines from a forest’s core towards its edge.
 This repository contains the code used in the manuscript 'ForEdgeClim v1.0: a 3D process-based microclimate model incorporating vertical and lateral energy fluxes to simulate forest edge-to-core transitions' and a more detailed overview with the applied physical equations can be found therein (submitted to Geoscientific Model Development). The ForEdgeClim code used to produce the manuscript is hosted on the Q-ForestLab GitHub page (https://github.com/qforestlab/ForEdgeClim) and the development repository of ForEdgeClim can be found on the personal GitHub page of model developer Emma Van de Walle (https://github.com/EmmaVdW27/ForEdgeClim).
 
-Installation
-
 ## Installation
 Install the package directly from GitHub:
 ```r
